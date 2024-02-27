@@ -22,17 +22,17 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies (Program)
-      working-directory: ./Project
+      working-directory: Project
       run: dotnet restore
     - name: Build
     
-      working-directory: ./Project
+      working-directory: Project
       run: dotnet build --no-restore
 
     - name: Restore dependencies (Tests)
-      working-directory: ./Project.Tests
+      working-directory: Project.Tests
       run: dotnet restore
       
     - name: Test
-      working-directory: ./Project.Tests
+      working-directory: Project.Tests
       run: dotnet test --no-build

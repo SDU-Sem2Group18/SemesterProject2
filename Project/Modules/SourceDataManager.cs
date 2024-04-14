@@ -10,8 +10,8 @@ namespace Project.Modules
         private Dictionary<string, Dictionary<DateTime, (float HeatDemand, float ElectricityPrice)>> InputData;
         string SourcePath;
 
-        public SourceDataManager() {
-            SourcePath = "./Data/source.csv";
+        public SourceDataManager(string sourcePath) {
+            SourcePath = sourcePath;
             InputData = ParseCSV(SourcePath);
         }
 

@@ -1,7 +1,9 @@
-﻿namespace Project;
+﻿using Project.Modules;
+
+namespace Project;
 
 public class Program {
     public static void Main() {
-        Console.WriteLine("Hello World");
+        Modules.SourceDataManager sourceDataManager = new("Data/summer.csv");
     }
 }

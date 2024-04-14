@@ -6,56 +6,17 @@ using System.Threading.Tasks;
 namespace Project.Modules
 {
     
-    public class ResultData
-{
-    private int unitId;
-    private float producedHeat;
-    private float producedElectricity;
-    private float consumedElectricity;
-    private float productionCost;
-    private float energyConsumed;
-    private float CO2Emissions;
-
-    public int GetUnitId()
-    {
-        return unitId;
+    public class ResultData {
+        public int unitId { get; set; }
+        public float producedHeat { get; set; }
+        public float producedElectricity { get; set; }
+        public float consumedElectricity { get; set; }
+        public float productionCost { get; set; }
+        public float energyConsumed { get; set; }
+        public float CO2Emissions { get; set; }
     }
 
-    public float GetProducedHeat()
-    {
-        return producedHeat;
-    }
-
-    public float GetProducedElectricity()
-    {
-        return producedElectricity;
-    }
-
-    public float GetConsumedElectricity()
-    {
-        return consumedElectricity;
-    }
-
-    public float GetProductionCost()
-    {
-        return productionCost;
-    }
-
-    public float GetEnergyConsumed()
-    {
-        return energyConsumed;
-    }
-
-    public float GetCO2Emissions()
-    {
-        return CO2Emissions;
-    }
-
-    // Assuming there might be constructors and setters 
-    // You would also add those here based on our requirements
-}
-    public class ResultDataManger
-    {
+    public class ResultDataManger {
         private List<ResultData> resultDataList;
 
         public void StoreResultData(ResultData data){
@@ -66,7 +27,7 @@ namespace Project.Modules
 
         public ResultData RetrieveResltData(int unitId){
             // Implement the logic to retrieve a specific ResultData by unitId
-            return resultDataList.Find(data => data.GetUnitId() == unitId);
+            return resultDataList.Find(data => data.unitId == unitId);
         }
 
         public List<ResultData> RetrieveAllResultData(){
@@ -77,7 +38,6 @@ namespace Project.Modules
 
         //Constructor for ResultDataManager
         public List<ResultData> ResultDataManager(){
-
             resultDataList = new List<ResultData>();
             return resultDataList;
         }

@@ -25,5 +25,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Project\Project.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

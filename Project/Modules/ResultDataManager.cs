@@ -46,13 +46,13 @@ namespace Project.Modules
         public float profit { get; set; }
     }
 
-    public class ResultDataManger {
+    public class ResultDataManger: IDisposable {
         private List<ResultData> resultDataList;
 
         public void SaveResultData(string path){
             
             //Implement The logic to store ResultData
-            resultDataList.Add(data);
+            
         }
 
         public ResultData RetrieveResultData(AssetManager.UnitNames unitName){
@@ -70,6 +70,15 @@ namespace Project.Modules
         public List<ResultData> ResultDataManager(){
             resultDataList = new List<ResultData>();
             return resultDataList;
+        }
+
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected bool Disposed {get; private set; }
+        protected virtual void Dispose(bool disposing) {
+            Disposed = true;
         }
     }
 }

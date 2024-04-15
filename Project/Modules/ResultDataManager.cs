@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 
 namespace Project.Modules
 {
-    
-    public struct ResultData {
+    [Delimiter(",")]
+    [CultureInfo("dk-DK")]
+    [InjectionOptions(CsvHelper.Configuration.InjectionOptions.Exception)]
+    public class ResultData {
         [Index(0)]
         [Name("Unit Name")]
         public AssetManager.UnitNames unitName { get; set; }
@@ -47,12 +51,31 @@ namespace Project.Modules
     }
 
     public class ResultDataManger: IDisposable {
-        private List<ResultData> resultDataList;
+        private List<ResultData>? resultDataList;
 
-        public void SaveResultData(string path){
+        public bool SaveResultData(string path, bool overwrite){
+            // Check if file path is valid
+            FileInfo? fi = null;
+            try {
+                fi = new FileInfo(path);
+            }
+            catch (ArgumentException) { }
+            catch (PathTooLongException) { }
+            catch (NotSupportedException) { }
+            if (ReferenceEquals(fi, null)) return false;
+            long length = fi.Length; 
             
-            //Implement The logic to store ResultData
-            
+            using(var writer = new StreamWriter(path, !overwrite))
+            using(var csv = new CsvWriter(writer, CultureInfo.GetCultureInfo("dk-DK"))) {
+                if(length != 0 && !overwrite) return false;
+                else {
+                    try {csv.WriteRecords(resultDataList);}
+                    catch(CsvHelper.WriterException) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         public ResultData RetrieveResultData(AssetManager.UnitNames unitName){

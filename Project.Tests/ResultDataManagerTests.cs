@@ -21,7 +21,7 @@ public class ResultDataManagerTests
             Assert.True(TestManager.SaveResultData(@"Data/ResultTest.csv", false), "WriteTest1 Fail");
             Assert.True(TestManager.SaveResultData(@"Data/ResultTest.csv", true), "WriteTest2 Fail");
             Assert.False(TestManager.SaveResultData(@"Data/ResultTest.csv", false), "WriteTest3 Fail");
-            //File.Delete(@"Data/ResultTest.csv");
+            File.Delete(@"Data/ResultTest.csv");
         }
     }
 }

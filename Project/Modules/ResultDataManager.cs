@@ -110,15 +110,11 @@ namespace Project.Modules
         }
 
         public List<ResultData>? GetResultData(){
-            
-            //Return the entire list of ResultData
             return ResultDataList;
         }
 
         //Constructor for ResultDataManager
-        public void ResultDataManager(){
-            //ResultDataList = new List<ResultData>();
-        }
+        public void ResultDataManager(){}
 
         public void Dispose() {
             Dispose(true);

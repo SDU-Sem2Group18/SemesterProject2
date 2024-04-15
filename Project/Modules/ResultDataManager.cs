@@ -6,52 +6,73 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration.Attributes;
+using Microsoft.VisualBasic;
 
 namespace Project.Modules
 {
-    [Delimiter(",")]
-    [CultureInfo("dk-DK")]
-    [InjectionOptions(CsvHelper.Configuration.InjectionOptions.Exception)]
-    public class ResultData {
-        [Index(0)]
-        [Name("Unit Name")]
-        public AssetManager.UnitNames unitName { get; set; }
-
-        [Index(1)]
-        [Name("Produced Heat (MWh)")]
-        public float producedHeat { get; set; }
-
-        [Index(2)]
-        [Name("Produced Electricity (MWh)")]
-        public float producedElectricity { get; set; }
-
-        [Index(3)]
-        [Name("Consumed Electricity (MWh)")]
-        public float consumedElectricity { get; set; }
-
-        [Index(4)]
-        [Name("Energy Consumed (MWh)")]
-        public float energyConsumed { get; set; }
-        
-        
-        [Index(5)]
-        [Name("CO2 Emissions (tonnes)")]
-        public float CO2Emissions { get; set; }
-        
-        
-        
-        [Index(6)]
-        [Name("Production Cost (Kr)")]
-        public float productionCost { get; set; }
-        
-        
-        [Index(7)]
-        [Name("Profit (Kr)")]
-        public float profit { get; set; }
-    }
-
     public class ResultDataManger: IDisposable {
-        private List<ResultData>? resultDataList;
+
+        [Delimiter(",")]
+        [CultureInfo("dk-DK")]
+        [InjectionOptions(CsvHelper.Configuration.InjectionOptions.Exception)]
+        public class ResultData {
+            [Index(0)]
+            [Name("Unit Name")]
+            public string UnitName { get; set; }
+
+            [Index(1)]
+            [Name("Produced Heat (MWh)")]
+            public float ProducedHeat { get; set; }
+
+            [Index(2)]
+            [Name("Produced Electricity (MWh)")]
+            public float ProducedElectricity { get; set; }
+
+            [Index(3)]
+            [Name("Consumed Electricity (MWh)")]
+            public float ConsumedElectricity { get; set; }
+
+            [Index(4)]
+            [Name("Energy Consumed (MWh)")]
+            public float EnergyConsumed { get; set; }
+            
+            
+            [Index(5)]
+            [Name("CO2 Emissions (tonnes)")]
+            public float CO2Emissions { get; set; }
+            
+            
+            
+            [Index(6)]
+            [Name("Production Cost (Kr)")]
+            public float ProductionCost { get; set; }
+            
+            
+            [Index(7)]
+            [Name("Profit (Kr)")]
+            public float Profit { get; set; }
+
+            public ResultData(
+            AssetManager.UnitNames unitName, 
+            float producedHeat, 
+            float producedELectricity, 
+            float consumedElectricity, 
+            float energyConsumed, 
+            float co2Emissions, 
+            float productionCost, 
+            float profit) {
+                UnitName = unitName.ToString();
+                ProducedHeat = producedHeat;
+                ProducedElectricity = producedELectricity;
+                ConsumedElectricity = consumedElectricity;
+                EnergyConsumed = energyConsumed;
+                CO2Emissions = co2Emissions;
+                ProductionCost = productionCost;
+                Profit = profit;
+            }
+        }
+
+        public List<ResultData> ResultDataList = new List<ResultData>();
 
         public bool SaveResultData(string path, bool overwrite){
             // Check if file path is valid
@@ -63,13 +84,23 @@ namespace Project.Modules
             catch (PathTooLongException) { }
             catch (NotSupportedException) { }
             if (ReferenceEquals(fi, null)) return false;
-            long length = fi.Length; 
+
+            long length;
+            if (File.Exists(path)) {
+                using(var file = File.Open(path, FileMode.Open)) {
+                    length = file.Length;
+                }
+            } 
+            else {
+                using(var file = File.Create(path)) {}
+                length = 0;
+            }
             
-            using(var writer = new StreamWriter(path, !overwrite))
+            using(var writer = new StreamWriter(path, overwrite))
             using(var csv = new CsvWriter(writer, CultureInfo.GetCultureInfo("dk-DK"))) {
                 if(length != 0 && !overwrite) return false;
                 else {
-                    try {csv.WriteRecords(resultDataList);}
+                    try {csv.WriteRecords(ResultDataList);}
                     catch(CsvHelper.WriterException) {
                         return false;
                     }
@@ -78,21 +109,15 @@ namespace Project.Modules
             return true;
         }
 
-        public ResultData RetrieveResultData(AssetManager.UnitNames unitName){
-            // Implement the logic to retrieve a specific ResultData by unitId
-            return resultDataList.Find(data => data.unitName == unitName);
-        }
-
-        public List<ResultData> RetrieveAllResultData(){
+        public List<ResultData>? GetResultData(){
             
             //Return the entire list of ResultData
-            return resultDataList;
+            return ResultDataList;
         }
 
         //Constructor for ResultDataManager
-        public List<ResultData> ResultDataManager(){
-            resultDataList = new List<ResultData>();
-            return resultDataList;
+        public void ResultDataManager(){
+            //ResultDataList = new List<ResultData>();
         }
 
         public void Dispose() {

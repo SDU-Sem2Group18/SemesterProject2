@@ -26,10 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Project\Project.csproj" />
   </ItemGroup>
-<<<<<<< HEAD
-=======
 
->>>>>>> 2a1cb1c (Update Project.Tests.csproj)
   <ItemGroup>
     <Content Include="Data\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

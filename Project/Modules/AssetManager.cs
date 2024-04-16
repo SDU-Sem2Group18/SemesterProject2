@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Modules
 {
-    public class AssetManager
-    {
+    public class AssetManager: IDisposable {
 
         public struct GridInfo {
             private string Name;
@@ -63,7 +62,7 @@ namespace Project.Modules
             ElectricBoiler
         }
 
-        public GridInfo Grid;
+        private GridInfo Grid;
         private Dictionary<UnitNames, UnitInformation> UnitData;
         
 
@@ -110,6 +109,15 @@ namespace Project.Modules
 
         public UnitInformation GetProductionUnit(UnitNames name){
             return UnitData[name];
+        }
+
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected bool Disposed {get; private set; }
+        protected virtual void Dispose(bool disposing) {
+            Disposed = true;
         }
     }
 }

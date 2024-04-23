@@ -8,7 +8,7 @@ public class ResultDataManagerTests
         using(ResultDataManger TestManager = new ResultDataManger()) {
             for(float x = 1.0f; x <= 50f; ++x) {
                 TestManager.ResultDataList?.Add(new ResultDataManger.ResultData(
-                AssetManager.UnitNames.ElectricBoiler,
+                "Electric Boiler",
                 x,
                 x,
                 x,

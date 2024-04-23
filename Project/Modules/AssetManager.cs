@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
+using CsvHelper;
+using CsvHelper.Configuration.Attributes;
+using System.Globalization;
+using System.Diagnostics;
 
 namespace Project.Modules
 {
@@ -28,84 +32,68 @@ namespace Project.Modules
         }
 
         public struct UnitInformation {
-            private string Name;
-            private string ImagePath;
-            private float MaxHeat;
-            private float ProductionCost;
-            private float? MaxElectricity { get; set; }
-            private float? GasConsumption { get; set; }
-            private float? Emissions { get; set; }
+            [Name("name")]
+            public string Name { get; set; }
 
-            public UnitInformation(string name, string imagePath, float producedHeat, float productionCost) {
-                Name = name;
-                ImagePath = imagePath;
-                MaxHeat = producedHeat;
-                ProductionCost = productionCost;
-            }
+            [Name("image")]
+            public string ImagePath { get; set; }
 
-            public string GetName() {
-                return Name;
-            }
+            [Name("max_heat")]
+            public float MaxHeat { get; set; }
+
+            [Name("prod_cost")]
+            public float ProductionCost { get; set; }
             
-            public string GetImage() {
-                return ImagePath;
-            }
+            [Name("max_el")]
+            [NullValues("-")]
+            public float? MaxElectricity { get; set; }
 
-            public (float MaxHeat, float ProductionCost, float? MaxElectricity, float? GasConsumption, float? Emissions) GetUnitInfo() {
-                return (MaxHeat, ProductionCost, MaxElectricity, GasConsumption, Emissions);
-            }
-        }
+            [Name("gas_cons")]
+            [NullValues("-")]
+            public float? GasConsumption { get; set; }
 
-        public enum UnitNames {
-            GasBoiler,
-            OilBoiler,
-            GasMotor,
-            ElectricBoiler
+            [Name("co2_ems")]
+            [NullValues("-")]
+            public float? Emissions { get; set; }
         }
 
         private GridInfo Grid;
-        private Dictionary<UnitNames, UnitInformation> UnitData;
+        public Dictionary<string, UnitInformation> UnitData;
         
+        private string SourcePath;
 
-        public AssetManager() {
+        public AssetManager(string sourcePath) {
             Grid = new(
                 "Heatington",
                 "/Assets/Images/Heatington.png"
             );
-            UnitData = new() {
-                {UnitNames.GasBoiler, new(
-                    "Gas Boiler",
-                    "/Assets/Images/GasBoiler.png",
-                    5.0f,
-                    500.0f
-                )},
-                {UnitNames.OilBoiler, new(
-                    "Oil Boiler",
-                    "/Assets/Images/OilBoiler.png",
-                    4.0f,
-                    700.0f
-                )},
-                {UnitNames.GasMotor, new(
-                    "Gas Motor",
-                    "/Assets/Images/GasMotor.png",
-                    3.6f,
-                    1100.0f
-                )},
-                {UnitNames.ElectricBoiler, new(
-                    "Electric Boiler",
-                    "/Assets/Images/ElectricBoiler.png",
-                    8.0f,
-                    50.0f
-                )}
-            };
+            SourcePath = sourcePath;
+            UnitData = new Dictionary<string, UnitInformation>();
+            GetUnitDataFromFile(sourcePath);
         }
 
         public GridInfo GetGridInfo() {
             return Grid;
         }
 
-        public UnitInformation GetProductionUnit(UnitNames name){
-            return UnitData[name];
+        public void GetUnitDataFromFile(string path) {
+            Dictionary<string, UnitInformation> returnDictionary = new Dictionary<string, UnitInformation>();
+            List<UnitInformation> units = new List<UnitInformation>();
+
+            try {
+                using (var reader = new StreamReader(path))
+                using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
+                    var records = csv.GetRecords<UnitInformation>();
+                    foreach (var record in records) {
+                        returnDictionary.Add(record.Name, record);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+                throw new Exception($"Error handling csv file. Ensure your file is formatted correctly. Details: \n{ex.Message}"); 
+            }
+            UnitData = returnDictionary;
         }
 
         public void Dispose() {

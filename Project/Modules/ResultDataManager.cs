@@ -10,7 +10,7 @@ using Microsoft.VisualBasic;
 
 namespace Project.Modules
 {
-    public class ResultDataManger: IDisposable {
+    public class ResultDataManager: IDisposable {
 
         [Delimiter(",")]
         [CultureInfo("dk-DK")]
@@ -53,7 +53,7 @@ namespace Project.Modules
             public float Profit { get; set; }
 
             public ResultData(
-            AssetManager.UnitNames unitName, 
+            string unitName, 
             float producedHeat, 
             float producedELectricity, 
             float consumedElectricity, 
@@ -61,7 +61,7 @@ namespace Project.Modules
             float co2Emissions, 
             float productionCost, 
             float profit) {
-                UnitName = unitName.ToString();
+                UnitName = unitName;
                 ProducedHeat = producedHeat;
                 ProducedElectricity = producedELectricity;
                 ConsumedElectricity = consumedElectricity;
@@ -114,7 +114,7 @@ namespace Project.Modules
         }
 
         //Constructor for ResultDataManager
-        public void ResultDataManager(){}
+        public ResultDataManager(){}
 
         public void Dispose() {
             Dispose(true);

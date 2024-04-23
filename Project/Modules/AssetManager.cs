@@ -30,16 +30,17 @@ namespace Project.Modules
         public struct UnitInformation {
             private string Name;
             private string ImagePath;
-            private float ProducedHeat;
+            private float MaxHeat;
             private float ProductionCost;
-            private float Emissions;
+            private float? MaxElectricity { get; set; }
+            private float? GasConsumption { get; set; }
+            private float? Emissions { get; set; }
 
-            public UnitInformation(string name, string imagePath, float producedHeat, float productionCost, float emissions) {
+            public UnitInformation(string name, string imagePath, float producedHeat, float productionCost) {
                 Name = name;
                 ImagePath = imagePath;
-                ProducedHeat = producedHeat;
+                MaxHeat = producedHeat;
                 ProductionCost = productionCost;
-                Emissions = emissions;
             }
 
             public string GetName() {
@@ -50,8 +51,8 @@ namespace Project.Modules
                 return ImagePath;
             }
 
-            public (float ProducedHeat, float ProductionCost, float Emissions) GetUnitInfo() {
-                return (ProducedHeat, ProductionCost, Emissions);
+            public (float MaxHeat, float ProductionCost, float? MaxElectricity, float? GasConsumption, float? Emissions) GetUnitInfo() {
+                return (MaxHeat, ProductionCost, MaxElectricity, GasConsumption, Emissions);
             }
         }
 
@@ -69,36 +70,32 @@ namespace Project.Modules
         public AssetManager() {
             Grid = new(
                 "Heatington",
-                "../Assets/Images/Heatington.png"
+                "/Assets/Images/Heatington.png"
             );
             UnitData = new() {
                 {UnitNames.GasBoiler, new(
                     "Gas Boiler",
-                    "../Assets/Images/GasBoiler.png",
+                    "/Assets/Images/GasBoiler.png",
                     5.0f,
-                    500.0f,
-                    215.0f
+                    500.0f
                 )},
                 {UnitNames.OilBoiler, new(
                     "Oil Boiler",
-                    "../Assets/Images/OilBoiler.png",
+                    "/Assets/Images/OilBoiler.png",
                     4.0f,
-                    700.0f,
-                    265.0f
+                    700.0f
                 )},
                 {UnitNames.GasMotor, new(
                     "Gas Motor",
-                    "../Assets/Images/GasMotor.png",
+                    "/Assets/Images/GasMotor.png",
                     3.6f,
-                    1100.0f,
-                    640.0f
+                    1100.0f
                 )},
                 {UnitNames.ElectricBoiler, new(
                     "Electric Boiler",
-                    "../Assets/Images/ElectricBoiler.png",
+                    "/Assets/Images/ElectricBoiler.png",
                     8.0f,
-                    50.0f,
-                    0.0f
+                    50.0f
                 )}
             };
         }

@@ -1,0 +1,5 @@
+name,image,max_heat,prod_cost,max_el,gas_cons,co2_ems
+Gas Boiler,/Assets/Images/GasBoiler.png,5,500,-,1.1,215
+Oil Boiler,/Assets/Images/OilBoilder.png,4,700,-,1.2,265
+Gas Motor,/Assets/Images/GasMotor.Png,3.6,1100,2.7,1.9,640
+Electric Boiler,/Assets/Images/ElectricBoiler.png,8,50,-8,-,-

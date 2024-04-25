@@ -44,9 +44,9 @@ namespace Project.Modules
                     }
                 }
                 return returnList;
-            } catch (System.IO.DirectoryNotFoundException ex) {
+            } catch (System.IO.DirectoryNotFoundException) {
                 throw new Exception("The source file could not be found. Please check the path and try again.");
-            } catch (System.IO.FileNotFoundException ex) {
+            } catch (System.IO.FileNotFoundException) {
                 throw new Exception("The source file could not be found. Please check the path and try again.");
             } catch (Exception ex) {
                 throw new Exception($"Something went wrong while parsing the source file. Please check the file and try again. Details:\n{ex.Message}");

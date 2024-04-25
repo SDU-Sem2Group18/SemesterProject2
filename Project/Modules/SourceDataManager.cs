@@ -35,15 +35,22 @@ namespace Project.Modules
 
         public List<HeatData> GetHeatData() {
             List<HeatData> returnList= new List<HeatData>();
-
-            using (var reader = new StreamReader(SourcePath))
-            using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
-                var records = csv.GetRecords<HeatData>();
-                foreach (var record in records) {
-                    returnList.Add(record);
+            try {
+                using (var reader = new StreamReader(SourcePath))
+                using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
+                    var records = csv.GetRecords<HeatData>();
+                    foreach (var record in records) {
+                        returnList.Add(record);
+                    }
                 }
+                return returnList;
+            } catch (System.IO.DirectoryNotFoundException ex) {
+                throw new Exception("The source file could not be found. Please check the path and try again.");
+            } catch (System.IO.FileNotFoundException ex) {
+                throw new Exception("The source file could not be found. Please check the path and try again.");
+            } catch (Exception ex) {
+                throw new Exception($"Something went wrong while parsing the source file. Please check the file and try again. Details:\n{ex.Message}");
             }
-            return returnList;
         }
 
         public void Dispose() {

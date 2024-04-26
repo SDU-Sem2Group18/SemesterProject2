@@ -3,13 +3,14 @@
         xmlns:vm="using:Project.GUI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Project.GUI.Views"
         mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
         Width="1400" Height="800"
         MinWidth="700" MinHeight="400"
         x:Class="Project.GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Heat Optimisation Manager"
+        Title="Danfoss Heat Optimisation Manager"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
@@ -37,51 +38,7 @@
 
         <!-- Main Content Area -->
         <Grid Grid.Row="2" Background="#d2d2d2">
-            <Grid RowDefinitions="*,330,*" ColumnDefinitions="*,300,*">
-                <StackPanel Grid.Row="1" Grid.Column="1" Background="#ffffff">
-                    <StackPanel Height="80" Background="#b5000c">
-                        <Image Height="45" Source="{SvgImage /Assets/danfoss-logo.svg}" Margin="0,5,0,0" />
-                        <Label HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,0">Heat Optimisation Manager</Label>
-                    </StackPanel>
-
-                    <Button Margin="10,10,10,10" Background="#ffffff" Width="280" Height="50">
-                        <StackPanel Width="280" Orientation="Horizontal">
-                            <Image Source="{SvgImage /Assets/new-file.svg}" Margin="5,0,5,0" />
-                            <StackPanel Orientation="Vertical">
-                                <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">New Project...</Label>
-                                <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">Creates a new Heat Optimisation Plan</Label>
-                            </StackPanel>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="10,0,10,10" Background="#ffffff" Width="280" Height="50">
-                        <StackPanel Width="280" Orientation="Horizontal">
-                            <Image Source="{SvgImage /Assets/open-file.svg}" Margin="5,0,5,0" />
-                            <StackPanel Orientation="Vertical">
-                                <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">Open Project...</Label>
-                                <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">Open existing Heat Optimisation Plan</Label>
-                            </StackPanel>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="10,0,10,10" Background="#ffffff" Width="280" Height="50">
-                        <StackPanel Width="280" Orientation="Horizontal">
-                            <Image Source="{SvgImage /Assets/info-icon.svg}" Margin="5,0,5,0" />
-                            <StackPanel Orientation="Vertical">
-                                <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">About</Label>
-                                <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">About this Software</Label>
-                            </StackPanel>
-                        </StackPanel>
-                    </Button>
-                    <Button Margin="10,0,10,10" Background="#ffffff" Width="280" Height="50">
-                        <StackPanel Width="280" Orientation="Horizontal">
-                            <Image Source="{SvgImage /Assets/close-icon.svg}" Margin="5,0,5,0" />
-                            <StackPanel Orientation="Vertical">
-                                <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">Quit</Label>
-                                <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">Return to Desktop</Label>
-                            </StackPanel>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-            </Grid>
+            <views:MainMenuView />
         </Grid>
     </Grid>
 

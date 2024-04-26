@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Avalonia.Controls;
 
 namespace Project.GUI.Views;

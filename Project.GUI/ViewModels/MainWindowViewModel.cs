@@ -1,8 +1,19 @@
-﻿namespace Project.GUI.ViewModels;
+﻿using Avalonia.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class MainWindowViewModel : ViewModelBase
+namespace Project.GUI.ViewModels;
+
+public partial class MainWindowViewModel : ObservableObject
 {
-#pragma warning disable CA1822 // Mark members as static
-    public string Greeting => "Welcome to Avalonia!";
-#pragma warning restore CA1822 // Mark members as static
+    public double MainMenuLeftMargin { get; set; } = 100;
+
+    [ObservableProperty]
+    private int _width;
+
+    [ObservableProperty]
+    private int _height;
+    
+    public MainWindowViewModel() {
+
+    }
 }

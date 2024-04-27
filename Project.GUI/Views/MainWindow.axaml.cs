@@ -8,6 +8,7 @@ using Avalonia.Controls.Chrome;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Project.GUI.ViewModels;
 using ReactiveUI;
 
@@ -21,9 +22,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         this.WhenActivated(action => action(ViewModel!.ShowOpenProjectDialog.RegisterHandler(DoShowDialogAsync)));
     }
 
+    public static FilePickerFileType ProjectFile { get; } = new("Heat Optimisation Project") {Patterns = new[] { "*.hop" }};
+
     private async void DoShowDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions() {
             Title = "Open Project",
+            FileTypeFilter = [ProjectFile],
             AllowMultiple = false,
         });
 

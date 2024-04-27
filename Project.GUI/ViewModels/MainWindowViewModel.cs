@@ -21,10 +21,12 @@ public class MainWindowViewModel : ViewModelBase
             var result = await ShowOpenProjectDialog.Handle(open);
         });
         MainMenu = new MainMenuViewModel();
+        About = new AboutViewModel();
         _contentViewModel = MainMenu;
     }
 
     public MainMenuViewModel MainMenu { get; }
+    public AboutViewModel About { get; }
 
     public ViewModelBase ContentViewModel {
         get => _contentViewModel;
@@ -40,7 +42,7 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public void AboutButton() {
-        ContentViewModel = new AboutViewModel();
+        ContentViewModel = About;
     }
 
     public void MainMenuButton() {

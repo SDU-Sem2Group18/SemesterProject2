@@ -17,7 +17,7 @@
               <Label HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,0">Heat Optimisation Manager</Label>
           </StackPanel>
 
-          <Button Margin="10,10,10,10" Background="#ffffff" Width="280" Height="50">
+          <Button Margin="10,10,10,10" Background="#ffffff" Width="280" Height="50" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).NewProjectButton}">
               <StackPanel Width="280" Orientation="Horizontal">
                   <Image Source="{SvgImage /Assets/new-file.svg}" Margin="5,0,5,0" />
                   <StackPanel Orientation="Vertical">
@@ -26,7 +26,7 @@
                   </StackPanel>
               </StackPanel>
           </Button>
-          <Button Margin="10,0,10,10" Background="#ffffff" Width="280" Height="50"  Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenProjectCommand}">
+          <Button Margin="10,0,10,10" Background="#ffffff" Width="280" Height="50" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenProjectCommand}">
               <StackPanel Width="280" Orientation="Horizontal"> 
                   <Image Source="{SvgImage /Assets/open-file.svg}" Margin="5,0,5,0" />
                   <StackPanel Orientation="Vertical">

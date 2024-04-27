@@ -31,7 +31,9 @@ public class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _contentViewModel, value);
     }
 
-    
+    public void NewProjectButton() {
+        ContentViewModel = new MainAppViewModel();
+    }
 
     public void OpenProjectButton() {
         

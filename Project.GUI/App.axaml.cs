@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Project.GUI.ViewModels;
 using Project.GUI.Views;
+using ReactiveUI;
 
 namespace Project.GUI;
 

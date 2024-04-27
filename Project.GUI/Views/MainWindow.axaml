@@ -11,6 +11,7 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Danfoss Heat Optimisation Manager"
+        
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
@@ -18,9 +19,7 @@
         >
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
     <!-- Main Grid dividing Titlebar and Content -->
@@ -38,7 +37,7 @@
 
         <!-- Main Content Area -->
         <Grid Grid.Row="2" Background="#d2d2d2">
-            <views:MainMenuView />
+            <UserControl Content="{Binding ContentViewModel}" />
         </Grid>
     </Grid>
 

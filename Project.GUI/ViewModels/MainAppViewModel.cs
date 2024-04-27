@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace Project.GUI.ViewModels
 {
-    public class ReturnProjectViewModel
+    public class MainAppViewModel : ViewModelBase
     {
-        
+        public MainAppViewModel() {
+
+        }
     }
 }

@@ -25,10 +25,10 @@
     <!-- Main Grid dividing Titlebar and Content -->
     <Grid RowDefinitions="5, 35,*">
         <!-- Small canvas atop all, to not cut off text and logo in full-window mode -->
-        <Canvas Grid.Row="0" Background="#dd000d" IsHitTestVisible="False"> </Canvas>
+        <Canvas Grid.Row="0" Background="#b5000c" IsHitTestVisible="False"> </Canvas>
 
         <!-- Title Bar -->
-        <Grid Grid.Row="1" Background="#dd000d" ColumnDefinitions="150,*,150" IsHitTestVisible="False">
+        <Grid Grid.Row="1" Background="#b5000c" ColumnDefinitions="150,*,150" IsHitTestVisible="False">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0">
                 <Image Height="25" Source="{SvgImage /Assets/danfoss-logo.svg}" Margin="10,5,0,0"/>
                 <Label FontSize="15" FontWeight="Bold" Foreground="White" Margin="5,3,0,0">Heat Optimisation Manager</Label>

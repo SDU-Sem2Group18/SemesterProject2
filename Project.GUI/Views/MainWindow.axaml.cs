@@ -22,18 +22,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     }
 
     private async void DoShowDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
-        //var dialog = new OpenProjectWindow();
-        //dialog.DataContext = interaction.Input;
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions() {
             Title = "Open Project",
             AllowMultiple = false,
         });
 
-        if(files.Count >= 1) {
-            Debug.WriteLine(files[0].Name);
-        }
-
-        //var result = await dialog.ShowDialog<ReturnProjectViewModel?>(this);
-        interaction.SetOutput(files[0].Path);
+        if(files.Count >= 1) interaction.SetOutput(files[0].Path);
+        else interaction.SetOutput(null);
     }
 }

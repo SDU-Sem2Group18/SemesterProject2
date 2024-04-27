@@ -10,12 +10,12 @@ namespace Project.GUI.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    public Interaction<OpenProjectViewModel, ReturnProjectViewModel?> ShowOpenProjectDialog { get; }
+    public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenProjectDialog { get; }
     public ICommand OpenProjectCommand { get; }
 
     private ViewModelBase _contentViewModel;
     public MainWindowViewModel() {
-        ShowOpenProjectDialog = new Interaction<OpenProjectViewModel, ReturnProjectViewModel?>();
+        ShowOpenProjectDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
         OpenProjectCommand = ReactiveCommand.CreateFromTask(async () => {
             var open = new OpenProjectViewModel();
             var result = await ShowOpenProjectDialog.Handle(open);

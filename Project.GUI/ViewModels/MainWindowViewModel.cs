@@ -25,4 +25,8 @@ public class MainWindowViewModel : ViewModelBase
     public void MainMenuView() {
         ContentViewModel = MainMenu;
     }
+
+    public void QuitButton() {
+        System.Environment.Exit(1);
+    }
 }

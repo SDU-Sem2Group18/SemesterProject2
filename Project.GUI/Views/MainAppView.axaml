@@ -11,15 +11,15 @@
   <Grid ColumnDefinitions="200,*" Background="#d2d2d2">
     <Grid Grid.Column="0" RowDefinitions="200,*,184" Background="#b5000c">
       <StackPanel Grid.Row="0" Width="200">
-        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c">
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c" Command="{Binding $parent[UserControl].((vm:MainAppViewModel)DataContext).GridUnitButton}">
           <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="Bold" FontSize="20">Grid and Units</Label>  
         </Button>
         <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
-        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c">
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c" Command="{Binding $parent[UserControl].((vm:MainAppViewModel)DataContext).SourceDataButton}">
           <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="Bold" FontSize="20">Source Data</Label>  
         </Button>
         <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
-        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c">
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c" Command="{Binding $parent[UserControl].((vm:MainAppViewModel)DataContext).OptimiserButton}">
           <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="Bold" FontSize="20">Optimisation</Label>  
         </Button>
       </StackPanel>
@@ -47,6 +47,8 @@
         </Button>
       </StackPanel>
     </Grid>
+
+    <UserControl Grid.Column="1" Content="{Binding ContentViewModel}" />
   </Grid>
 
 

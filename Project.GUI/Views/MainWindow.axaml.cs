@@ -21,11 +21,19 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         this.WhenActivated(action => action(ViewModel!.ShowOpenProjectDialog.RegisterHandler(DoShowDialogAsync)));
     }
 
-    private async Task DoShowDialogAsync(InteractionContext<OpenProjectViewModel, ReturnProjectViewModel?> interaction) {
-        var dialog = new OpenProjectWindow();
-        dialog.DataContext = interaction.Input;
+    private async void DoShowDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
+        //var dialog = new OpenProjectWindow();
+        //dialog.DataContext = interaction.Input;
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions() {
+            Title = "Open Project",
+            AllowMultiple = false,
+        });
 
-        var result = await dialog.ShowDialog<ReturnProjectViewModel?>(this);
-        interaction.SetOutput(result);
+        if(files.Count >= 1) {
+            Debug.WriteLine(files[0].Name);
+        }
+
+        //var result = await dialog.ShowDialog<ReturnProjectViewModel?>(this);
+        interaction.SetOutput(files[0].Path);
     }
 }

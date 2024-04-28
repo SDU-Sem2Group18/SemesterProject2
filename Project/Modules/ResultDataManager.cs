@@ -76,37 +76,69 @@ namespace Project.Modules
 
         public bool SaveResultData(string path, bool overwrite){
             // Check if file path is valid
-            FileInfo? fi = null;
-            try {
-                fi = new FileInfo(path);
-            }
-            catch (ArgumentException) { }
-            catch (PathTooLongException) { }
-            catch (NotSupportedException) { }
-            if (ReferenceEquals(fi, null)) return false;
+            try
+    {
+        // Check if file path is valid
+        FileInfo fi = new FileInfo(path);
 
-            long length;
-            if (File.Exists(path)) {
-                using(var file = File.Open(path, FileMode.Open)) {
-                    length = file.Length;
-                }
-            } 
-            else {
-                using(var file = File.Create(path)) {}
-                length = 0;
+        long length;
+        if (File.Exists(path))
+        {
+            using (var file = File.Open(path, FileMode.Open))
+            {
+                length = file.Length;
             }
-            
-            using(var writer = new StreamWriter(path, overwrite))
-            using(var csv = new CsvWriter(writer, CultureInfo.GetCultureInfo("dk-DK"))) {
-                if(length != 0 && !overwrite) return false;
-                else {
-                    try {csv.WriteRecords(ResultDataList);}
-                    catch(CsvHelper.WriterException) {
-                        return false;
-                    }
-                }
+        }
+        else
+        {
+            using (var file = File.Create(path)) { }
+            length = 0;
+        }
+
+        using (var writer = new StreamWriter(path, overwrite))
+        using (var csv = new CsvWriter(writer, CultureInfo.GetCultureInfo("dk-DK")))
+        {
+            if (length!= 0 &&!overwrite)
+            {
+                throw new IOException("File already exists and overwrite is false.");
             }
-            return true;
+            else
+            {
+                csv.WriteRecords(ResultDataList);
+            }
+        }
+        return true;
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine($"Error: Invalid file path. {ex.Message}");
+        return false;
+    }
+    catch (PathTooLongException ex)
+    {
+        Console.WriteLine($"Error: File path is too long. {ex.Message}");
+        return false;
+    }
+    catch (NotSupportedException ex)
+    {
+        Console.WriteLine($"Error: File path is not supported. {ex.Message}");
+        return false;
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine($"Error: Unable to write to file. {ex.Message}");
+        return false;
+    }
+    catch (CsvHelper.WriterException ex)
+    {
+        Console.WriteLine($"Error: Unable to write CSV data. {ex.Message}");
+        return false;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error: An unexpected error occurred. {ex.Message}");
+        return false;
+    }
         }
 
         public List<ResultData>? GetResultData(){

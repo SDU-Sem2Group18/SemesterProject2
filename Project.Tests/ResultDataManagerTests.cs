@@ -5,10 +5,10 @@ public class ResultDataManagerTests
     [Fact]
     public void WriteTest()
     {
-        using(ResultDataManger TestManager = new ResultDataManger()) {
+        using(ResultDataManager TestManager = new ResultDataManager()) {
             for(float x = 1.0f; x <= 50f; ++x) {
-                TestManager.ResultDataList?.Add(new ResultDataManger.ResultData(
-                AssetManager.UnitNames.ElectricBoiler,
+                TestManager.ResultDataList?.Add(new ResultDataManager.ResultData(
+                "Electric Boiler",
                 x,
                 x,
                 x,

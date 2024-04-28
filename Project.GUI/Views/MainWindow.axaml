@@ -3,31 +3,42 @@
         xmlns:vm="using:Project.GUI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:views="clr-namespace:Project.GUI.Views"
+        mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
+        Width="1400" Height="800"
+        MinWidth="1400" MinHeight="800"
         x:Class="Project.GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Heat Optimisation Manager"
+        Title="Danfoss Heat Optimisation Manager"
+        
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
+        CanResize = "True"
         >
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="50,*">
-        <Grid Grid.Row="0" Background="Red" ColumnDefinitions="150,*,150">
-            <Image Grid.Column="0" Height="50" Source="/Assets/danfoss-logo.jpg"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
-                <Label FontSize="35" FontWeight="Bold" Foreground="White">Heat Optimisation Manager</Label>
+    <!-- Main Grid dividing Titlebar and Content -->
+    <Grid RowDefinitions="5, 35,*">
+        <!-- Small canvas atop all, to not cut off text and logo in full-window mode -->
+        <Canvas Grid.Row="0" Background="#b5000c" IsHitTestVisible="False"> </Canvas>
+
+        <!-- Title Bar -->
+        <Grid Grid.Row="1" Background="#b5000c" ColumnDefinitions="150,*,150" IsHitTestVisible="False">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0">
+                <Image Height="25" Source="{SvgImage /Assets/danfoss-logo.svg}" Margin="10,5,0,0"/>
+                <Label FontSize="15" FontWeight="Bold" Foreground="White" Margin="5,3,0,0">Heat Optimisation Manager</Label>
             </StackPanel>
         </Grid>
-        
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="2" Background="#d2d2d2">
+            <UserControl Content="{Binding ContentViewModel}" />
+        </Grid>
     </Grid>
 
 </Window>

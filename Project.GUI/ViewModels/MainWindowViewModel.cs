@@ -11,15 +11,31 @@ namespace Project.GUI.ViewModels;
 public class MainWindowViewModel : ViewModelBase
 {
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenProjectDialog { get; }
+    public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenSourceDataDialog { get; }
+    public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenAssetDataDialog { get; }
     public ICommand OpenProjectCommand { get; }
+    public ICommand OpenSourceDataCommand { get; }
+    public ICommand OpenAssetDataCommand { get; }
 
     private ViewModelBase _contentViewModel;
     public MainWindowViewModel() {
         ShowOpenProjectDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
+        ShowOpenSourceDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
+        ShowOpenAssetDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
+
         OpenProjectCommand = ReactiveCommand.CreateFromTask(async () => {
             var open = new OpenProjectViewModel();
             var result = await ShowOpenProjectDialog.Handle(open);
         });
+        OpenSourceDataCommand = ReactiveCommand.CreateFromTask(async () => {
+            var open = new OpenProjectViewModel();
+            var result = await ShowOpenSourceDataDialog.Handle(open);
+        });
+        OpenAssetDataCommand = ReactiveCommand.CreateFromTask(async () => {
+            var open = new OpenProjectViewModel();
+            var result = await ShowOpenAssetDataDialog.Handle(open);
+        });
+
         MainMenu = new MainMenuViewModel();
         About = new AboutViewModel();
         _contentViewModel = MainMenu;
@@ -35,10 +51,6 @@ public class MainWindowViewModel : ViewModelBase
 
     public void NewProjectButton() {
         ContentViewModel = new MainAppViewModel();
-    }
-
-    public void OpenProjectButton() {
-        
     }
 
     public void AboutButton() {

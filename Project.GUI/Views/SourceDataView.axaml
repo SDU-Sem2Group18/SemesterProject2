@@ -53,12 +53,12 @@
   <StackPanel Orientation="Vertical" Background="#ffffff">
     <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
       <!-- Source File Header Goes Here -->
-      <Label FontWeight="Bold" FontSize="25">Data: </Label>
+      <Label FontWeight="SemiBold" FontSize="25">Data: </Label>
       <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
         <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding SourcePathTextColour}" Text="{Binding SourcePath}" />
       </Border>
       <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenSourceDataCommand}">
-        <Label Foreground="#ffffff" FontWeight="Bold" HorizontalAlignment="Center">Load</Label>
+        <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
       </Button>
     </StackPanel>
 

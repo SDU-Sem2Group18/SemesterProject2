@@ -31,7 +31,7 @@
         <Grid Grid.Row="1" Background="#b5000c" ColumnDefinitions="150,*,150" IsHitTestVisible="False">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0">
                 <Image Height="25" Source="{SvgImage /Assets/danfoss-logo.svg}" Margin="10,5,0,0"/>
-                <Label FontSize="15" FontWeight="Bold" Foreground="White" Margin="5,3,0,0">Heat Optimisation Manager</Label>
+                <Label FontSize="18" FontWeight="Bold" Foreground="White" Margin="5,3,0,0">Heat Optimisation Manager</Label>
             </StackPanel>
         </Grid>
 

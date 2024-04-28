@@ -12,7 +12,7 @@
       <StackPanel Grid.Row="1" Grid.Column="1" Background="#ffffff">
           <StackPanel Height="80" Background="#b5000c">
               <Image Height="45" Source="{SvgImage /Assets/danfoss-logo.svg}" Margin="0,5,0,0" />
-              <Label HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,0">Heat Optimisation Manager</Label>
+              <Label HorizontalAlignment="Center" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,-5,0,0">Heat Optimisation Manager</Label>
           </StackPanel>
 
           <Canvas Height="180" Margin="5,5,5,5">
@@ -34,8 +34,8 @@ Syddansk Universitet Sønderborg, 2024
               <StackPanel Width="280" Orientation="Horizontal">
                   <Image Height="32" Source="{SvgImage /Assets/return-icon.svg}" Margin="7,0,5,0" />
                   <StackPanel Orientation="Vertical">
-                      <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">Return</Label>
-                      <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">Back to Main Menu</Label>
+                      <Label FontSize="18" Margin="5,-6,0,-5" FontWeight="SemiBold" Foreground="#1d1d1d">Return</Label>
+                      <Label FontSize="12" Margin="5,0,0,0" Foreground="#646464">Back to Main Menu</Label>
                   </StackPanel>
               </StackPanel>
           </Button>

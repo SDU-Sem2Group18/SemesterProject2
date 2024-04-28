@@ -14,15 +14,15 @@
       <StackPanel Grid.Row="1" Grid.Column="1" Background="#ffffff">
           <StackPanel Height="80" Background="#b5000c">
               <Image Height="45" Source="{SvgImage /Assets/danfoss-logo.svg}" Margin="0,5,0,0" />
-              <Label HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,0">Heat Optimisation Manager</Label>
+              <Label HorizontalAlignment="Center" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,-5,0,0">Heat Optimisation Manager</Label>
           </StackPanel>
 
           <Button Margin="10,10,10,10" Background="#ffffff" Width="280" Height="50" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).NewProjectButton}">
               <StackPanel Width="280" Orientation="Horizontal">
                   <Image Source="{SvgImage /Assets/new-file.svg}" Margin="5,0,5,0" />
                   <StackPanel Orientation="Vertical">
-                      <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">New Project...</Label>
-                      <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">Creates a new Heat Optimisation Plan</Label>
+                      <Label FontSize="18" Margin="5,-6,0,-5" FontWeight="SemiBold" Foreground="#1d1d1d">New Project...</Label>
+                      <Label FontSize="12" Margin="5,0,0,0" Foreground="#646464">Creates a new Heat Optimisation Plan</Label>
                   </StackPanel>
               </StackPanel>
           </Button>
@@ -30,8 +30,8 @@
               <StackPanel Width="280" Orientation="Horizontal"> 
                   <Image Source="{SvgImage /Assets/open-file.svg}" Margin="5,0,5,0" />
                   <StackPanel Orientation="Vertical">
-                      <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">Open Project...</Label>
-                      <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">Open existing Heat Optimisation Plan</Label>
+                      <Label FontSize="18" Margin="5,-6,0,-5" FontWeight="SemiBold" Foreground="#1d1d1d">Open Project...</Label>
+                      <Label FontSize="12" Margin="5,0,0,0" Foreground="#646464">Open existing Heat Optimisation Plan</Label>
                   </StackPanel>
               </StackPanel>
           </Button>
@@ -39,8 +39,8 @@
               <StackPanel Width="280" Orientation="Horizontal">
                   <Image Source="{SvgImage /Assets/info-icon.svg}" Margin="5,0,5,0" />
                   <StackPanel Orientation="Vertical">
-                      <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">About</Label>
-                      <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">About this Software</Label>
+                      <Label FontSize="18" Margin="5,-6,0,-5" FontWeight="SemiBold" Foreground="#1d1d1d">About</Label>
+                      <Label FontSize="12" Margin="5,0,0,0" Foreground="#646464">About this Software</Label>
                   </StackPanel>
               </StackPanel>
           </Button>
@@ -48,8 +48,8 @@
               <StackPanel Width="280" Orientation="Horizontal">
                   <Image Source="{SvgImage /Assets/close-icon.svg}" Margin="5,0,5,0" />
                   <StackPanel Orientation="Vertical">
-                      <Label FontSize="15" Margin="5,-2,0,-5" FontWeight="Bold" Foreground="#1d1d1d">Quit</Label>
-                      <Label FontSize="10" Margin="5,0,0,0" Foreground="#646464">Return to Desktop</Label>
+                      <Label FontSize="18" Margin="5,-6,0,-5" FontWeight="SemiBold" Foreground="#1d1d1d">Quit</Label>
+                      <Label FontSize="12" Margin="5,0,0,0" Foreground="#646464">Return to Desktop</Label>
                   </StackPanel>
               </StackPanel>
           </Button>

@@ -15,7 +15,7 @@
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
-        CanResize = "True"
+        CanResize = "False"
         >
 
     <Design.DataContext>
@@ -37,7 +37,7 @@
 
         <!-- Main Content Area -->
         <Grid Grid.Row="2" Background="#d2d2d2">
-            <UserControl Content="{Binding ContentViewModel}" />
+            <UserControl Content="{Binding ContentViewModel}"/>
         </Grid>
     </Grid>
 

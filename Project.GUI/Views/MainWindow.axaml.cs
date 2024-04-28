@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
@@ -5,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
@@ -23,6 +25,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         this.WhenActivated(action => action(ViewModel!.ShowOpenSourceDataDialog.RegisterHandler(DoShowSourceDataDialogAsync)));
         this.WhenActivated(action => action(ViewModel!.ShowOpenAssetDataDialog.RegisterHandler(DoShowAssetDataDialogAsync)));
     }
+
+    
 
     public static FilePickerFileType ProjectFile { get; } = new("Heat Optimisation Project") {Patterns = new[] { "*.hop" } };
     public static FilePickerFileType SourceDataFile { get; } = new("Heat/Electricity Source Data") {Patterns = new[] { "*.csv" } };
@@ -65,4 +69,5 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         if(files.Count >= 1) interaction.SetOutput(files[0].Path);
         else interaction.SetOutput(null);
     }
+    
 }

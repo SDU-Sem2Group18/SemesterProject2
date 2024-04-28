@@ -46,7 +46,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             AllowMultiple = false,
         });
 
-        if(files.Count >= 1) interaction.SetOutput(files[0].Path);
+        if(files.Count >= 1) {
+            interaction.SetOutput(files[0].Path);
+            if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
+            else ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
+            ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+        }
         else interaction.SetOutput(null);
     }
 

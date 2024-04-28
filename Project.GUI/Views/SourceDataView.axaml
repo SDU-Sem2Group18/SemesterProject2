@@ -2,7 +2,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Project.GUI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="760"
-             x:Class="Project.GUI.Views.SourceDataView">
-  <Label Foreground="Black">SourceDataView</Label>
+             x:Class="Project.GUI.Views.SourceDataView"
+             x:DataType="vm:SourceDataViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="Label">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="Background" Value="#b5000c" />
+      <Style Selector="^:pointerover /template/ ContentPresenter">
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#800008" />
+      </Style>
+    </Style>
+  </UserControl.Styles>
+
+  <StackPanel Orientation="Vertical" Background="#ffffff">
+    <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+      <!-- Source File Header Goes Here -->
+      <Label FontWeight="Bold" FontSize="25">Data: </Label>
+      <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
+        <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding SourcePathTextColour}" Text="{Binding SourcePath}" />
+      </Border>
+      <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenSourceDataCommand}">
+        <Label Foreground="#ffffff" FontWeight="Bold" HorizontalAlignment="Center">Load</Label>
+      </Button>
+    </StackPanel>
+
+    <StackPanel Orientation="Horizontal">
+      <!-- Source Data Table And Graphs Go Here -->
+    </StackPanel>
+  </StackPanel>
+
 </UserControl>

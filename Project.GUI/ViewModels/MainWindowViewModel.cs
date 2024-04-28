@@ -37,12 +37,14 @@ public class MainWindowViewModel : ViewModelBase
         });
 
         MainMenu = new MainMenuViewModel();
+        MainAppViewModel = new MainAppViewModel();
         About = new AboutViewModel();
         _contentViewModel = MainMenu;
     }
 
     public MainMenuViewModel MainMenu { get; }
     public AboutViewModel About { get; }
+    public MainAppViewModel MainAppViewModel { get; }
 
     public ViewModelBase ContentViewModel {
         get => _contentViewModel;
@@ -50,7 +52,7 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public void NewProjectButton() {
-        ContentViewModel = new MainAppViewModel();
+        ContentViewModel = MainAppViewModel;
     }
 
     public void AboutButton() {

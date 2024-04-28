@@ -14,15 +14,15 @@
     <Grid Grid.Column="0" RowDefinitions="200,*,184" Background="#b5000c">
       <StackPanel Grid.Row="0" Width="200">
         <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="{Binding GridUnitButtonColour}" Command="{Binding GridUnitButton}">
-          <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="Bold" FontSize="20">Grid and Units</Label>  
+          <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Grid and Units</Label>  
         </Button>
         <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
         <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="{Binding SourceDataButtonColour}" Command="{Binding SourceDataButton}">
-          <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="Bold" FontSize="20">Source Data</Label>  
+          <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Source Data</Label>  
         </Button>
         <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
         <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="{Binding OptimiserButtonColour}" Command="{Binding OptimiserButton}">
-          <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="Bold" FontSize="20">Optimisation</Label>  
+          <Label VerticalAlignment="Center" Margin="0,2,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Optimisation</Label>  
         </Button>
       </StackPanel>
 

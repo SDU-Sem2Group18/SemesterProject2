@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Project.GUI.ViewModels"
              xmlns:local="clr-namespace:Project.GUI.Models;assembly=Project.GUI"
-             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="760"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
              x:Class="Project.GUI.Views.SourceDataView"
              x:DataType="vm:SourceDataViewModel"
              
@@ -65,7 +65,7 @@
     <!-- Source Data Table And Graphs Go Here -->
     <Grid x:Name="ContentGrid"  ColumnDefinitions="472,10,*" Margin="10,30,10,10">
       <!-- Source Data Table -->
-      <DataGrid HorizontalAlignment="Stretch" Height="710" VerticalScrollBarVisibility="Auto" Grid.Column="0" 
+      <DataGrid HorizontalAlignment="Stretch" Height="715" VerticalScrollBarVisibility="Auto" Grid.Column="0" 
                 ItemsSource="{Binding HeatData}" 
                 IsReadOnly="True" 
                 GridLinesVisibility="All" 

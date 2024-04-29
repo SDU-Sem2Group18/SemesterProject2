@@ -11,6 +11,8 @@
   
   <UserControl.Resources>
     <local:ImagePathConverter x:Key="imagePathConverter" />
+    <local:IntHidingConverter x:Key="intHidingConverter" />
+    <local:BindingVisibilityConverter x:Key="bindingVisibilityConverter" />
   </UserControl.Resources>
 
   <UserControl.Styles>
@@ -57,9 +59,43 @@
     <!-- Data Display -->
     <ScrollViewer Margin="10,15,10,10" Grid.Row="1">
       <StackPanel Orientation="Vertical">
-        <Label FontWeight="SemiBold" FontSize="25">Heating Grid Information</Label>
-        <StackPanel Orientation="Horizontal">
-          <asyncImageLoader:AdvancedImage Source="{Binding GridUnitAssetManager, Converter={StaticResource imagePathConverter}, ConverterParameter=grid}}" />
+        <Label FontWeight="SemiBold" FontSize="45" IsVisible="{Binding GridDataHeaderVisible}">Heating Grid Information</Label>
+        <StackPanel Margin="10,30,10,10" Orientation="Horizontal" IsVisible="{Binding GridDataHeaderVisible}">
+          <Border Width="350" Height ="200" BorderThickness="0" BorderBrush="Black">
+            <asyncImageLoader:AdvancedImage Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{Binding GridUnitAssetManager, Converter={StaticResource imagePathConverter}, ConverterParameter=grid}}" />
+          </Border>
+          <Grid VerticalAlignment="Top" Margin="20,-10,0,0" ColumnDefinitions="250,*" RowDefinitions="55,55,55" Height="200" DataContext="{Binding GridInfo}">
+            <Label Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" FontSize="35">Name: </Label>
+            <Label Grid.Row="0" Grid.Column="1" FontSize="35" Content="{Binding Name}" />
+
+            <Label Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" FontSize="35">Architecture: </Label>
+            <Label Grid.Row="1" Grid.Column="1" FontSize="35" Content="{Binding Architecture}" />
+
+            <Label Grid.Row="2" Grid.Column="0" FontWeight="SemiBold" FontSize="35">Size: </Label>
+            <Label Grid.Row="2" Grid.Column="1" FontSize="35" Content="{Binding Size, Converter={StaticResource intHidingConverter}}" />
+          </Grid>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+          
+          <Label FontWeight="SemiBold" FontSize="45" Margin="0,30,0,0" IsVisible="{Binding UnitDataHeaderVisible}">Production Unit Information</Label>
+          <ItemsControl ItemsSource="{Binding UnitData}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Grid RowDefinitions="250" Width="1200">
+                  <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Height="200" Margin="10,25,10,25">
+                      <Border Width="350" Height ="200" BorderThickness="1" BorderBrush="Black">
+                        <asyncImageLoader:AdvancedImage Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding ., Converter={StaticResource imagePathConverter}, ConverterParameter=unit}" />
+                      </Border>
+                    </StackPanel>
+                    <Canvas Height="1" Width="800" Margin="0,0,0,0" HorizontalAlignment="Center" Background="#b5000c"></Canvas>
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            
+          </ItemsControl>
         </StackPanel>
       </StackPanel>
     </ScrollViewer>

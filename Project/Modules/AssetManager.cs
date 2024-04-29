@@ -7,6 +7,7 @@ using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 using System.Globalization;
 using System.Diagnostics;
+using CsvHelper.Configuration;
 
 namespace Project.Modules
 {
@@ -26,7 +27,7 @@ namespace Project.Modules
             public int Size { get; set; }
         }
 
-        public struct UnitInformation {
+        public class UnitInformation {
             [Name("name")]
             public string Name { get; set; }
 
@@ -50,6 +51,18 @@ namespace Project.Modules
             [Name("co2_ems")]
             [NullValues("-")]
             public float? Emissions { get; set; }
+
+            public string SelfPath { get; set;}
+            public void SetSelfPath(string path) {
+                SelfPath = path;
+            }
+        }
+
+        public sealed class UnitInformationMap : ClassMap<UnitInformation> {
+            public UnitInformationMap() {
+                AutoMap(new CultureInfo("dk-DK", false));
+                Map(m => m.SelfPath).Ignore();
+            }
         }
 
         public GridInfo Grid;
@@ -89,11 +102,11 @@ namespace Project.Modules
 
         public void GetUnitDataFromFile() {
             List<UnitInformation> returnList = new List<UnitInformation>();
-            List<UnitInformation> units = new List<UnitInformation>();
 
             try {
                 using (var reader = new StreamReader(UnitSourcePath))
                 using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
+                    csv.Context.RegisterClassMap<UnitInformationMap>();
                     var records = csv.GetRecords<UnitInformation>();
                     foreach (var record in records) {
                         returnList.Add(record);

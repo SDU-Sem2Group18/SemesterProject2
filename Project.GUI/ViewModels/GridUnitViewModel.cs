@@ -51,6 +51,12 @@ namespace Project.GUI.ViewModels
             get => assetManager;
             set => this.RaiseAndSetIfChanged(ref assetManager, value);
         }
+
+        private bool gridDataHeaderVisible = false;
+        public bool GridDataHeaderVisible {
+            get => gridDataHeaderVisible;
+            set => this.RaiseAndSetIfChanged(ref gridDataHeaderVisible, value);
+        }
         private AssetManager.GridInfo gridInfo = new AssetManager.GridInfo();
         public AssetManager.GridInfo GridInfo {
             get => gridInfo;
@@ -63,6 +69,7 @@ namespace Project.GUI.ViewModels
                 GridUnitAssetManager = new AssetManager(GridSourcePath, "");
                 Debug.WriteLine("AssetManager created");
                 GridInfo = GridUnitAssetManager.Grid;
+                GridDataHeaderVisible = true;
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);
                 GridSourcePath = "Error parsing grid data";
@@ -70,17 +77,27 @@ namespace Project.GUI.ViewModels
             }
         }
 
+        private bool unitDataHeaderVisible = false;
+        public bool UnitDataHeaderVisible {
+            get => unitDataHeaderVisible;
+            set => this.RaiseAndSetIfChanged(ref unitDataHeaderVisible, value);
+        }
         public ObservableCollection<AssetManager.UnitInformation> UnitData { get; set; }
         public void LoadUnitData() {
             UnitSourcePathTextColour = Brush.Parse("#1d1d1d");
             try {
                 Debug.WriteLine(UnitSourcePath);
-                
+                if(GridSourcePath != "Use the load button to open grid data") GridUnitAssetManager = new AssetManager(GridSourcePath, UnitSourcePath);
+                else GridUnitAssetManager = new AssetManager("", UnitSourcePath);
                 List<AssetManager.UnitInformation> unitData = new List<AssetManager.UnitInformation>();
-                GridUnitAssetManager.UnitSourcePath = UnitSourcePath;
-                GridUnitAssetManager.GetUnitDataFromFile();
+                
                 Debug.WriteLine("SourceDataManager created");
-                foreach(AssetManager.UnitInformation _ in GridUnitAssetManager.UnitData) unitData.Add(_);
+                foreach(AssetManager.UnitInformation _ in GridUnitAssetManager.UnitData) {
+                    _.SetSelfPath(UnitSourcePath);
+                    unitData.Add(_);
+                }
+                foreach(AssetManager.UnitInformation _ in unitData) UnitData.Add(_);
+                UnitDataHeaderVisible = true;
                 
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);

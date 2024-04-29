@@ -13,22 +13,17 @@ namespace Project.Modules
     public class AssetManager: IDisposable {
 
         public struct GridInfo {
-            private string Name;
-            private string ImagePath;
+            [Name("name")]
+            public string Name { get; set; }
 
-            public GridInfo(string name, string imagePath) {
-                Name = name;
-                ImagePath = imagePath;
-            }
+            [Name("image")]
+            public string ImagePath { get; set; }
+            
+            [Name("architecture")]
+            public string Architecture { get; set; }
 
-            public string GetName() {
-                return Name;
-            }
-
-            public string GetImage() {
-                return ImagePath;
-            }
-
+            [Name("size")]
+            public int Size { get; set; }
         }
 
         public struct UnitInformation {
@@ -57,27 +52,41 @@ namespace Project.Modules
             public float? Emissions { get; set; }
         }
 
-        private GridInfo Grid;
-        public Dictionary<string, UnitInformation> UnitData;
+        public GridInfo Grid;
+        public List<UnitInformation> UnitData;
         
-        private string SourcePath;
+        private string GridSourcePath;
+        private string UnitSourcePath;
 
-        public AssetManager(string sourcePath) {
-            Grid = new(
-                "Heatington",
-                "/Assets/Images/Heatington.png"
-            );
-            SourcePath = sourcePath;
-            UnitData = new Dictionary<string, UnitInformation>();
-            GetUnitDataFromFile(sourcePath);
+        public AssetManager() {
+            GridSourcePath = "";
+            UnitSourcePath = "";
+            UnitData = new List<UnitInformation>();
+            Grid = new GridInfo();
         }
 
-        public GridInfo GetGridInfo() {
-            return Grid;
+        public void GetGriddataFromFile(string path) {
+            GridInfo gridInfo = new GridInfo();
+            List<GridInfo> grids = new List<GridInfo>();
+
+            try {
+                using (var reader = new StreamReader(path))
+                using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
+                    var records = csv.GetRecords<GridInfo>();
+                    foreach (var record in records) {
+                        grids.Add(record);
+                    }
+                    gridInfo = grids[0];
+                }
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+                throw new Exception($"Error handling csv file. Ensure your file is formatted correctly. Details: \n{ex.Message}"); 
+            }
+            Grid = gridInfo;
         }
 
         public void GetUnitDataFromFile(string path) {
-            Dictionary<string, UnitInformation> returnDictionary = new Dictionary<string, UnitInformation>();
+            List<UnitInformation> returnList = new List<UnitInformation>();
             List<UnitInformation> units = new List<UnitInformation>();
 
             try {
@@ -85,15 +94,14 @@ namespace Project.Modules
                 using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
                     var records = csv.GetRecords<UnitInformation>();
                     foreach (var record in records) {
-                        returnDictionary.Add(record.Name, record);
+                        returnList.Add(record);
                     }
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Debug.WriteLine(ex.Message);
                 throw new Exception($"Error handling csv file. Ensure your file is formatted correctly. Details: \n{ex.Message}"); 
             }
-            UnitData = returnDictionary;
+            UnitData = returnList;
         }
 
         public void Dispose() {

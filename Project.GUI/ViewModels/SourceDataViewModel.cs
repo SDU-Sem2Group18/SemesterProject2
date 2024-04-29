@@ -43,6 +43,7 @@ namespace Project.GUI.ViewModels
                 using (SourceDataManager sourceDataManager = new SourceDataManager(SourcePath)) {
                     List<SourceDataManager.HeatData> heatData = sourceDataManager.GetHeatData();
                     Debug.WriteLine("SourceDataManager created");
+                    if(HeatData.Count != 0) HeatData.Clear();
                     foreach(SourceDataManager.HeatData _ in heatData) HeatData.Add(_);
                 }
             } catch (Exception e) {

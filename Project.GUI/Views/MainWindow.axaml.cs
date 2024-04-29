@@ -71,7 +71,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             interaction.SetOutput(files[0].Path);
             if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
             else ViewModel!.MainAppViewModel.GridUnit.UnitSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
-            //ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+            ViewModel!.MainAppViewModel.GridUnit.LoadUnitData();
         }
     }
 
@@ -86,7 +86,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             interaction.SetOutput(files[0].Path);
             if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
             else ViewModel!.MainAppViewModel.GridUnit.GridSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
-            //ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+            ViewModel!.MainAppViewModel.GridUnit.LoadGridData();
         }
     }
 }

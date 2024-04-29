@@ -19,7 +19,7 @@ namespace Project.GUI.ViewModels
     public class GridUnitViewModel : ViewModelBase
     {
         public GridUnitViewModel() {
-            
+            UnitData = new ObservableCollection<AssetManager.UnitInformation>();
         }
 
         // Unit Data Source Path
@@ -46,20 +46,23 @@ namespace Project.GUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref gridSourcePathTextColour, value);
         }
 
+        private AssetManager assetManager = new AssetManager("", "");
+        public AssetManager GridUnitAssetManager {
+            get => assetManager;
+            set => this.RaiseAndSetIfChanged(ref assetManager, value);
+        }
         private AssetManager.GridInfo gridInfo = new AssetManager.GridInfo();
         public AssetManager.GridInfo GridInfo {
             get => gridInfo;
             set => this.RaiseAndSetIfChanged(ref gridInfo, value);
         }
         public void LoadGridData() {
+            Debug.WriteLine("Loading Grid Data");
             GridSourcePathTextColour = Brush.Parse("#1d1d1d");
             try {
-                Debug.WriteLine(GridSourcePath);
-                using (AssetManager assetManager = new AssetManager()) {
-                    assetManager.GetGriddataFromFile(GridSourcePath);
-                    Debug.WriteLine("AssetManager created");
-                    GridInfo = assetManager.Grid;
-                }
+                GridUnitAssetManager = new AssetManager(GridSourcePath, "");
+                Debug.WriteLine("AssetManager created");
+                GridInfo = GridUnitAssetManager.Grid;
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);
                 GridSourcePath = "Error parsing grid data";
@@ -72,12 +75,13 @@ namespace Project.GUI.ViewModels
             UnitSourcePathTextColour = Brush.Parse("#1d1d1d");
             try {
                 Debug.WriteLine(UnitSourcePath);
-                using (AssetManager assetManager = new AssetManager()) {
-                    List<AssetManager.UnitInformation> unitData = new List<AssetManager.UnitInformation>();
-                    assetManager.GetUnitDataFromFile(UnitSourcePath);
-                    Debug.WriteLine("SourceDataManager created");
-                    foreach(AssetManager.UnitInformation _ in assetManager.UnitData) unitData.Add(_);
-                }
+                
+                List<AssetManager.UnitInformation> unitData = new List<AssetManager.UnitInformation>();
+                GridUnitAssetManager.UnitSourcePath = UnitSourcePath;
+                GridUnitAssetManager.GetUnitDataFromFile();
+                Debug.WriteLine("SourceDataManager created");
+                foreach(AssetManager.UnitInformation _ in GridUnitAssetManager.UnitData) unitData.Add(_);
+                
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);
                 UnitSourcePath = "Error parsing source data";

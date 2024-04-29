@@ -3,10 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Project.GUI.ViewModels"
+             xmlns:local="clr-namespace:Project.GUI.Models;assembly=Project.GUI"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
              x:Class="Project.GUI.Views.GridUnitView"
              x:DataType="vm:GridUnitViewModel">
   
+  <UserControl.Resources>
+    <local:ImagePathConverter x:Key="imagePathConverter" />
+  </UserControl.Resources>
+
   <UserControl.Styles>
     <Style Selector="Label">
       <Setter Property="Foreground" Value="#1d1d1d" />
@@ -21,33 +27,42 @@
     </Style>
   </UserControl.Styles>
 
-  <StackPanel Orientation="Vertical" Background="#ffffff">
-   <StackPanel Orientation="Horizontal" >
-    <!-- Grid Data Load Button -->
-    <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
-      <!-- Source File Header Goes Here -->
-      <Label FontWeight="SemiBold" FontSize="25">Grid: </Label>
-      <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
-        <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding GridSourcePathTextColour}" Text="{Binding GridSourcePath}" />
-      </Border>
-      <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenGridDataCommand}">
-        <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
-      </Button>
+  <Grid RowDefinitions="*, 755" Background="#ffffff">
+    <StackPanel Orientation="Horizontal" >
+      <!-- Grid Data Load Button -->
+      <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+        <!-- Source File Header Goes Here -->
+        <Label FontWeight="SemiBold" FontSize="25">Grid: </Label>
+        <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
+          <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding GridSourcePathTextColour}" Text="{Binding GridSourcePath}" />
+        </Border>
+        <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenGridDataCommand}">
+          <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
+        </Button>
+      </StackPanel>
+
+      <!-- Unit Data Load Button -->
+      <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="50,10,0,0">
+        <!-- Source File Header Goes Here -->
+        <Label FontWeight="SemiBold" FontSize="25">Units: </Label>
+        <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
+          <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding UnitSourcePathTextColour}" Text="{Binding UnitSourcePath}" />
+        </Border>
+        <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenUnitDataCommand}">
+          <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
+        </Button>
+      </StackPanel>
     </StackPanel>
 
-    <!-- Unit Data Load Button -->
-    <StackPanel Orientation="Horizontal" Margin="50,10,0,0">
-      <!-- Source File Header Goes Here -->
-      <Label FontWeight="SemiBold" FontSize="25">Units: </Label>
-      <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
-        <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding UnitSourcePathTextColour}" Text="{Binding UnitSourcePath}" />
-      </Border>
-      <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenUnitDataCommand}">
-        <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
-      </Button>
-    </StackPanel>
-  </StackPanel>
-
-  </StackPanel>
+    <!-- Data Display -->
+    <ScrollViewer Margin="10,15,10,10" Grid.Row="1">
+      <StackPanel Orientation="Vertical">
+        <Label FontWeight="SemiBold" FontSize="25">Heating Grid Information</Label>
+        <StackPanel Orientation="Horizontal">
+          <asyncImageLoader:AdvancedImage Source="{Binding GridUnitAssetManager, Converter={StaticResource imagePathConverter}, ConverterParameter=grid}}" />
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
 
 </UserControl>

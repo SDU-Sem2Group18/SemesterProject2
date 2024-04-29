@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace Project.Modules
 {
-    public class AssetManager: IDisposable {
+    public class AssetManager {
 
         public struct GridInfo {
             [Name("name")]
@@ -55,22 +55,24 @@ namespace Project.Modules
         public GridInfo Grid;
         public List<UnitInformation> UnitData;
         
-        private string GridSourcePath;
-        private string UnitSourcePath;
+        public string GridSourcePath;
+        public string UnitSourcePath;
 
-        public AssetManager() {
-            GridSourcePath = "";
-            UnitSourcePath = "";
+        public AssetManager(string gridPath, string unitPath) {
+            GridSourcePath = gridPath;
+            UnitSourcePath = unitPath;
             UnitData = new List<UnitInformation>();
             Grid = new GridInfo();
+            if(GridSourcePath != "") GetGridDataFromFile();
+            if(UnitSourcePath != "") GetUnitDataFromFile();
         }
 
-        public void GetGriddataFromFile(string path) {
+        public void GetGridDataFromFile() {
             GridInfo gridInfo = new GridInfo();
             List<GridInfo> grids = new List<GridInfo>();
 
             try {
-                using (var reader = new StreamReader(path))
+                using (var reader = new StreamReader(GridSourcePath))
                 using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
                     var records = csv.GetRecords<GridInfo>();
                     foreach (var record in records) {
@@ -85,12 +87,12 @@ namespace Project.Modules
             Grid = gridInfo;
         }
 
-        public void GetUnitDataFromFile(string path) {
+        public void GetUnitDataFromFile() {
             List<UnitInformation> returnList = new List<UnitInformation>();
             List<UnitInformation> units = new List<UnitInformation>();
 
             try {
-                using (var reader = new StreamReader(path))
+                using (var reader = new StreamReader(UnitSourcePath))
                 using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
                     var records = csv.GetRecords<UnitInformation>();
                     foreach (var record in records) {
@@ -102,15 +104,6 @@ namespace Project.Modules
                 throw new Exception($"Error handling csv file. Ensure your file is formatted correctly. Details: \n{ex.Message}"); 
             }
             UnitData = returnList;
-        }
-
-        public void Dispose() {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected bool Disposed {get; private set; }
-        protected virtual void Dispose(bool disposing) {
-            Disposed = true;
         }
     }
 }

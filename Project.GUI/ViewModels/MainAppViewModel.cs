@@ -19,6 +19,13 @@ namespace Project.GUI.ViewModels
 
             _contentViewModel = GridUnit;
         }
+        public void Reset() {
+            GridUnit = new GridUnitViewModel();
+            SourceData = new SourceDataViewModel();
+            Optimiser = new OptimiserViewModel();
+
+            GridUnitButton();
+        }
 
         private IBrush gridUnitButtonColour = Brush.Parse("#800008");
         public IBrush GridUnitButtonColour {
@@ -36,9 +43,9 @@ namespace Project.GUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref optimiserButtonColour, value);
         }
 
-        public GridUnitViewModel GridUnit { get; }
-        public SourceDataViewModel SourceData { get; }
-        public OptimiserViewModel Optimiser { get; }
+        public GridUnitViewModel GridUnit { get; set;}
+        public SourceDataViewModel SourceData { get; set; }
+        public OptimiserViewModel Optimiser { get; set; }
 
         public ViewModelBase ContentViewModel {
             get => _contentViewModel;

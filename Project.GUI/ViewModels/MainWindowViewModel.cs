@@ -54,7 +54,9 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public void NewProjectButton() {
+        MainAppViewModel.Reset();
         ContentViewModel = MainAppViewModel;
+        
     }
 
     public void AboutButton() {

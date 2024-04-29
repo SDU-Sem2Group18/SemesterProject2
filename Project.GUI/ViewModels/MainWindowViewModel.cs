@@ -14,16 +14,19 @@ public class MainWindowViewModel : ViewModelBase
 {
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenProjectDialog { get; }
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenSourceDataDialog { get; }
-    public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenAssetDataDialog { get; }
+    public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenUnitDataDialog { get; }
+    public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenGridDataDialog { get; }
     public ICommand OpenProjectCommand { get; }
     public ICommand OpenSourceDataCommand { get; }
-    public ICommand OpenAssetDataCommand { get; }
+    public ICommand OpenUnitDataCommand { get; }
+    public ICommand OpenGridDataCommand { get; }
 
     private ViewModelBase _contentViewModel;
     public MainWindowViewModel() {
         ShowOpenProjectDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
         ShowOpenSourceDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
-        ShowOpenAssetDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
+        ShowOpenUnitDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
+        ShowOpenGridDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
 
         OpenProjectCommand = ReactiveCommand.CreateFromTask(async () => {
             var open = new OpenProjectViewModel();
@@ -33,9 +36,13 @@ public class MainWindowViewModel : ViewModelBase
             var open = new OpenProjectViewModel();
             var result = await ShowOpenSourceDataDialog.Handle(open);
         });
-        OpenAssetDataCommand = ReactiveCommand.CreateFromTask(async () => {
+        OpenUnitDataCommand = ReactiveCommand.CreateFromTask(async () => {
             var open = new OpenProjectViewModel();
-            var result = await ShowOpenAssetDataDialog.Handle(open);
+            var result = await ShowOpenUnitDataDialog.Handle(open);
+        });
+        OpenGridDataCommand = ReactiveCommand.CreateFromTask(async () => {
+            var open = new OpenProjectViewModel();
+            var result = await ShowOpenGridDataDialog.Handle(open);
         });
 
         MainMenu = new MainMenuViewModel();

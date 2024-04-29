@@ -23,7 +23,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         InitializeComponent();
         this.WhenActivated(action => action(ViewModel!.ShowOpenProjectDialog.RegisterHandler(DoShowProjectDialogAsync)));
         this.WhenActivated(action => action(ViewModel!.ShowOpenSourceDataDialog.RegisterHandler(DoShowSourceDataDialogAsync)));
-        this.WhenActivated(action => action(ViewModel!.ShowOpenAssetDataDialog.RegisterHandler(DoShowAssetDataDialogAsync)));
+        this.WhenActivated(action => action(ViewModel!.ShowOpenUnitDataDialog.RegisterHandler(DoShowUnitDataDialogAsync)));
+        this.WhenActivated(action => action(ViewModel!.ShowOpenGridDataDialog.RegisterHandler(DoShowGridDataDialogAsync)));
     }
 
     
@@ -59,15 +60,33 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         else interaction.SetOutput(null);
     }
 
-    private async void DoShowAssetDataDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
+    private async void DoShowUnitDataDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions() {
             Title = "Open Grid/Unit Data",
             FileTypeFilter = [AssetDataFile],
             AllowMultiple = false,
         });
 
-        if(files.Count >= 1) interaction.SetOutput(files[0].Path);
-        else interaction.SetOutput(null);
+        if(files.Count >= 1) {
+            interaction.SetOutput(files[0].Path);
+            if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
+            else ViewModel!.MainAppViewModel.GridUnit.UnitSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
+            //ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+        }
     }
-    
+
+    private async void DoShowGridDataDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
+        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions() {
+            Title = "Open Grid/Unit Data",
+            FileTypeFilter = [AssetDataFile],
+            AllowMultiple = false,
+        });
+
+        if(files.Count >= 1) {
+            interaction.SetOutput(files[0].Path);
+            if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
+            else ViewModel!.MainAppViewModel.GridUnit.GridSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
+            //ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+        }
+    }
 }

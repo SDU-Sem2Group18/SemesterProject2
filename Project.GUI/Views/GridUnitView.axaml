@@ -2,7 +2,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Project.GUI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
-             x:Class="Project.GUI.Views.GridUnitView">
-  <Label Foreground="Black">GridUnitView</Label>
+             x:Class="Project.GUI.Views.GridUnitView"
+             x:DataType="vm:GridUnitViewModel">
+  
+  <UserControl.Styles>
+    <Style Selector="Label">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="Background" Value="#b5000c" />
+      <Style Selector="^:pointerover /template/ ContentPresenter">
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#800008" />
+      </Style>
+    </Style>
+  </UserControl.Styles>
+
+   <StackPanel Orientation="Vertical" Background="#ffffff">
+    <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+      <!-- Source File Header Goes Here -->
+      <Label FontWeight="SemiBold" FontSize="25">Grid: </Label>
+      <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
+        <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding GridSourcePathTextColour}" Text="{Binding GridSourcePath}" />
+      </Border>
+      <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenGridDataCommand}">
+        <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
+      </Button>
+    </StackPanel>
+
+  </StackPanel>
+
 </UserControl>

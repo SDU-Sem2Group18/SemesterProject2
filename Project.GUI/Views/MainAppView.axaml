@@ -9,9 +9,11 @@
              >
 
   
-
+  <!-- Main Content Area -->
   <Grid ColumnDefinitions="200,*" Background="#d2d2d2">
+    <!-- Side Panel to the Left -->
     <Grid Grid.Column="0" RowDefinitions="200,*,184" Background="#b5000c">
+      <!-- Top View Selection Buttons -->
       <StackPanel Grid.Row="0" Width="200">
         <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="{Binding GridUnitButtonColour}" Command="{Binding GridUnitButton}">
           <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Grid and Units</Label>  
@@ -26,6 +28,7 @@
         </Button>
       </StackPanel>
 
+      <!-- Bottom Command Buttons -->
       <StackPanel Grid.Row="2" Width="200">
         <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c">
           <StackPanel Width="200" Orientation="Horizontal">
@@ -50,6 +53,7 @@
       </StackPanel>
     </Grid>
 
+    <!-- Current View -->
     <UserControl Grid.Column="1" Content="{Binding ContentViewModel}" />
   </Grid>
 

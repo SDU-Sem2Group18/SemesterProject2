@@ -8,7 +8,7 @@ namespace Project.GUI.ViewModels
     public class AboutViewModel : ViewModelBase
     {
         public AboutViewModel() {
-
+            // Empty View Model to initialise the About View
         }
     }
 }

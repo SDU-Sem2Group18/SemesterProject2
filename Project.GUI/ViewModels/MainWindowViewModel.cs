@@ -12,6 +12,7 @@ namespace Project.GUI.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    // Properties needed by children view models to load data from files
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenProjectDialog { get; }
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenSourceDataDialog { get; }
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenUnitDataDialog { get; }
@@ -21,12 +22,13 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand OpenUnitDataCommand { get; }
     public ICommand OpenGridDataCommand { get; }
 
-    private ViewModelBase _contentViewModel;
+    // Constructor
     public MainWindowViewModel() {
-        ShowOpenProjectDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
-        ShowOpenSourceDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
-        ShowOpenUnitDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
-        ShowOpenGridDataDialog = new Interaction<OpenProjectViewModel, System.Uri?>();
+        // Initialising interactions and commands for children to load data from files
+        ShowOpenProjectDialog =    new Interaction<OpenProjectViewModel, Uri?>();
+        ShowOpenSourceDataDialog = new Interaction<OpenProjectViewModel, Uri?>();
+        ShowOpenUnitDataDialog =   new Interaction<OpenProjectViewModel, Uri?>();
+        ShowOpenGridDataDialog =   new Interaction<OpenProjectViewModel, Uri?>();
 
         OpenProjectCommand = ReactiveCommand.CreateFromTask(async () => {
             var open = new OpenProjectViewModel();
@@ -45,25 +47,30 @@ public class MainWindowViewModel : ViewModelBase
             var result = await ShowOpenGridDataDialog.Handle(open);
         });
 
+        // Initialising children view models of the next underlying layer
         MainMenu = new MainMenuViewModel();
         MainAppViewModel = new MainAppViewModel();
         About = new AboutViewModel();
+
+        // Setting default view model to MainMenuViewModel
         _contentViewModel = MainMenu;
     }
 
+    // Defining children view models of the next underlying layer
     public MainMenuViewModel MainMenu { get; }
     public AboutViewModel About { get; }
     public MainAppViewModel MainAppViewModel { get; }
+    private ViewModelBase _contentViewModel;
 
     public ViewModelBase ContentViewModel {
         get => _contentViewModel;
         set => this.RaiseAndSetIfChanged(ref _contentViewModel, value);
     }
 
+    // Defining button logic for main menu buttons
     public void NewProjectButton() {
         MainAppViewModel.Reset();
         ContentViewModel = MainAppViewModel;
-        
     }
 
     public void AboutButton() {

@@ -12,7 +12,6 @@
   <UserControl.Resources>
     <local:ImagePathConverter x:Key="imagePathConverter" />
     <local:IntHidingConverter x:Key="intHidingConverter" />
-    <local:BindingVisibilityConverter x:Key="bindingVisibilityConverter" />
   </UserControl.Resources>
 
   <UserControl.Styles>
@@ -29,11 +28,11 @@
     </Style>
   </UserControl.Styles>
 
+  <!-- Main Content Area -->
   <Grid RowDefinitions="*, 755" Background="#ffffff">
     <StackPanel Orientation="Horizontal" >
       <!-- Grid Data Load Button -->
       <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
-        <!-- Source File Header Goes Here -->
         <Label FontWeight="SemiBold" FontSize="25">Grid: </Label>
         <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
           <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding GridSourcePathTextColour}" Text="{Binding GridSourcePath}" />
@@ -45,7 +44,6 @@
 
       <!-- Unit Data Load Button -->
       <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="50,10,0,0">
-        <!-- Source File Header Goes Here -->
         <Label FontWeight="SemiBold" FontSize="25">Units: </Label>
         <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
           <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding UnitSourcePathTextColour}" Text="{Binding UnitSourcePath}" />
@@ -59,6 +57,7 @@
     <!-- Data Display -->
     <ScrollViewer Margin="10,15,10,10" Grid.Row="1">
       <StackPanel Orientation="Vertical">
+        <!-- Grid Information -->
         <Label FontWeight="SemiBold" FontSize="45" IsVisible="{Binding GridDataHeaderVisible}">Heating Grid Information</Label>
         <StackPanel Margin="10,30,10,10" Orientation="Horizontal" IsVisible="{Binding GridDataHeaderVisible}">
           <Border Width="350" Height ="200" BorderThickness="0" BorderBrush="Black">
@@ -76,8 +75,8 @@
           </Grid>
         </StackPanel>
 
+        <!-- Unit Information -->
         <StackPanel Orientation="Vertical">
-          
           <Label FontWeight="SemiBold" FontSize="45" Margin="0,30,0,0" IsVisible="{Binding UnitDataHeaderVisible}">Production Unit Information</Label>
           <ItemsControl ItemsSource="{Binding UnitData}">
             <ItemsControl.ItemTemplate>
@@ -94,7 +93,6 @@
                 </Grid>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
-            
           </ItemsControl>
         </StackPanel>
       </StackPanel>

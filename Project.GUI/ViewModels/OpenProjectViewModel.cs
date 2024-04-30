@@ -7,6 +7,6 @@ namespace Project.GUI.ViewModels
 {
     public class OpenProjectViewModel
     {
-        
+        // Empty ViewModel needed to initialise the OpenProjectView (Open File Dialogue)
     }
 }

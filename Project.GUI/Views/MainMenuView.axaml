@@ -9,14 +9,17 @@
              >
   
 
-  
+  <!-- Main Content Area -->
   <Grid RowDefinitions="*,330,*" ColumnDefinitions="*,300,*">
+      <!-- Main Menu contained in Grid Row & Column 1 (330x300) -->
       <StackPanel Grid.Row="1" Grid.Column="1" Background="#ffffff">
+          <!-- Logo and Title -->
           <StackPanel Height="80" Background="#b5000c">
               <Image Height="45" Source="{SvgImage /Assets/danfoss-logo.svg}" Margin="0,5,0,0" />
               <Label HorizontalAlignment="Center" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,-5,0,0">Heat Optimisation Manager</Label>
           </StackPanel>
 
+          <!-- Main Menu Options -->
           <Button Margin="10,10,10,10" Background="#ffffff" Width="280" Height="50" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).NewProjectButton}">
               <StackPanel Width="280" Orientation="Horizontal">
                   <Image Source="{SvgImage /Assets/new-file.svg}" Margin="5,0,5,0" />

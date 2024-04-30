@@ -9,6 +9,7 @@
              x:DataType="vm:SourceDataViewModel"
              
              >
+  
   <UserControl.Resources>
     <local:WhiteSpaceAlignmentConverter x:Key="whiteSpaceConverter" />
   </UserControl.Resources>
@@ -50,9 +51,10 @@
     </Style>
   </UserControl.Styles>
 
+  <!-- Main Content --> 
   <StackPanel Orientation="Vertical" Background="#ffffff">
+    <!-- Source File Selection -->
     <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
-      <!-- Source File Header Goes Here -->
       <Label FontWeight="SemiBold" FontSize="25">Data: </Label>
       <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
         <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding SourcePathTextColour}" Text="{Binding SourcePath}" />
@@ -63,6 +65,7 @@
     </StackPanel>
 
     <!-- Source Data Table And Graphs Go Here -->
+    <!-- TODO: Hide Source Data Grid when no data is loaded -->
     <Grid x:Name="ContentGrid"  ColumnDefinitions="472,10,*" Margin="10,30,10,10">
       <!-- Source Data Table -->
       <DataGrid HorizontalAlignment="Stretch" Height="715" VerticalScrollBarVisibility="Auto" Grid.Column="0" 

@@ -24,8 +24,6 @@
 
     <!-- Main Grid dividing Titlebar and Content -->
     <Grid RowDefinitions="35,*">
-        <!-- Small canvas atop all, to not cut off text and logo in full-window mode -->
-
         <!-- Title Bar -->
         <Grid Grid.Row="0" Background="#b5000c" ColumnDefinitions="150,*,150" IsHitTestVisible="False">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0">

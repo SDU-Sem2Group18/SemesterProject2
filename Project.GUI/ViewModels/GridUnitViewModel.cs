@@ -18,6 +18,7 @@ namespace Project.GUI.ViewModels
 {
     public class GridUnitViewModel : ViewModelBase
     {
+        // Constructor
         public GridUnitViewModel() {
             UnitData = new ObservableCollection<AssetManager.UnitInformation>();
         }
@@ -34,7 +35,7 @@ namespace Project.GUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref unitSourcePathTextColour, value);
         }
 
-        // Grid Data Source Path
+        // Grid Data Source Path and Colour
         private string gridSourcePath = "Use the load button to open grid data";
         public string GridSourcePath {
             get => gridSourcePath;
@@ -46,12 +47,14 @@ namespace Project.GUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref gridSourcePathTextColour, value);
         }
 
+        // Observable AssetManager
         private AssetManager assetManager = new AssetManager("", "");
         public AssetManager GridUnitAssetManager {
             get => assetManager;
             set => this.RaiseAndSetIfChanged(ref assetManager, value);
         }
 
+        // Properties and Methods related to GridData, as specified in the AssetManager, as well as content visibility bool
         private bool gridDataHeaderVisible = false;
         public bool GridDataHeaderVisible {
             get => gridDataHeaderVisible;
@@ -77,6 +80,7 @@ namespace Project.GUI.ViewModels
             }
         }
 
+        // Properties and Methods related to UnitData, as specified in the AssetManager, as well as content visibility bool
         private bool unitDataHeaderVisible = false;
         public bool UnitDataHeaderVisible {
             get => unitDataHeaderVisible;

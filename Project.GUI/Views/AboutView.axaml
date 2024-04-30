@@ -8,6 +8,7 @@
              x:DataType="vm:AboutViewModel"
              >
   
+  <!-- Main Content Area -->
   <Grid RowDefinitions="*,330,*" ColumnDefinitions="*,300,*" Background="#d4d4d4">
       <StackPanel Grid.Row="1" Grid.Column="1" Background="#ffffff">
           <StackPanel Height="80" Background="#b5000c">

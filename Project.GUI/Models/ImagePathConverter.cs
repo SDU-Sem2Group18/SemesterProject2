@@ -25,8 +25,11 @@ namespace Project.GUI.Models
 
                     Debug.WriteLine(assetManager.Grid.ImagePath);
                     Debug.WriteLine(assetManager.GridSourcePath);
+
+                    // Logic to create final URI
                     if(File.Exists(assetManager.Grid.ImagePath)) return assetManager.Grid.ImagePath;
                     else {
+                        // Path in CSV is not an absolute path, logic to create absolute path from relative path provided in CSV
                         Uri imagePath = new Uri($"file:///{assetManager.Grid.ImagePath}");
                         Uri csvPath = new Uri($"file://{assetManager.GridSourcePath}");
                         Debug.WriteLine(imagePath.AbsolutePath);
@@ -40,6 +43,7 @@ namespace Project.GUI.Models
                     }
                 } return "/Assets/ImageNotFound.png";
                 
+                // Same logic as above, but accessing data in a different way due to working with units
                 case "unit":
                     AssetManager.UnitInformation? unitInfo = value as AssetManager.UnitInformation;
                     if(unitInfo != null) {

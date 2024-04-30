@@ -18,24 +18,25 @@ namespace Project.GUI.ViewModels
 {
     public class SourceDataViewModel : ViewModelBase
     {
+        // Constructor
         public SourceDataViewModel() {
             HeatData = new ObservableCollection<SourceDataManager.HeatData>();
         }
 
+        // Properties related to the source data
         private string sourcePath = "Use the load button to open source data";
         public string SourcePath {
             get => sourcePath;
             set => this.RaiseAndSetIfChanged(ref sourcePath, value);
         }
-
         private IBrush sourcePathTextColour = Brush.Parse("#1d1d1d");
         public IBrush SourcePathTextColour {
             get => sourcePathTextColour;
             set => this.RaiseAndSetIfChanged(ref sourcePathTextColour, value);
         }
-        
-        public ObservableCollection<SourceDataManager.HeatData> HeatData { get; set; }
 
+        // Properties and Methods related to HeatData, as specified in the SourceDataManager
+        public ObservableCollection<SourceDataManager.HeatData> HeatData { get; set; }
         public void LoadSourceData() {
             SourcePathTextColour = Brush.Parse("#1d1d1d");
             try {

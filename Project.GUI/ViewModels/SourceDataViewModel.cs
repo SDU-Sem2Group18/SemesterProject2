@@ -13,6 +13,8 @@ using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Avalonia.Interactivity;
 using Avalonia;
+using Avalonia.Threading;
+using Project.GUI.Models;
 
 namespace Project.GUI.ViewModels
 {
@@ -24,6 +26,11 @@ namespace Project.GUI.ViewModels
         }
 
         // Properties related to the source data
+        private bool sourceDataVisible = false;
+        public bool SourceDataVisible {
+            get => sourceDataVisible;
+            set => this.RaiseAndSetIfChanged(ref sourceDataVisible, value);
+        }
         private string sourcePath = "Use the load button to open source data";
         public string SourcePath {
             get => sourcePath;
@@ -46,6 +53,18 @@ namespace Project.GUI.ViewModels
                     Debug.WriteLine("SourceDataManager created");
                     if(HeatData.Count != 0) HeatData.Clear();
                     foreach(SourceDataManager.HeatData _ in heatData) HeatData.Add(_);
+
+                    List<double> xData = HeatData.Select(data => data.TimeFrom.ToOADate()).ToList();
+                    List<double> yData = HeatData.Select(data => (double)data.HeatDemand).ToList();
+                    string title = "Heat Demand";
+                    Debug.WriteLine("Sending Command");
+                    MessageBus.Current.SendMessage(new HeatDataLoadedMessage("HeatPlot", (xData, yData, title, "Date & Time", "Heat Demand (MWh)")));
+
+                    yData = HeatData.Select(data => (double)data.ElectricityPrice).ToList();
+                    title = "Electricity Price";
+                    Debug.WriteLine("Sending Command");
+                    MessageBus.Current.SendMessage(new HeatDataLoadedMessage("ElectricityPlot", (xData, yData, title, "Date & Time", "Electricity Price (Kr)")));
+                    SourceDataVisible = true;
                 }
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);

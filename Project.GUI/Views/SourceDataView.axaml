@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Project.GUI.ViewModels"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
              xmlns:local="clr-namespace:Project.GUI.Models;assembly=Project.GUI"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
              x:Class="Project.GUI.Views.SourceDataView"
@@ -65,8 +66,7 @@
     </StackPanel>
 
     <!-- Source Data Table And Graphs Go Here -->
-    <!-- TODO: Hide Source Data Grid when no data is loaded -->
-    <Grid x:Name="ContentGrid"  ColumnDefinitions="472,10,*" Margin="10,30,10,10">
+    <Grid x:Name="ContentGrid" IsVisible="{Binding SourceDataVisible}" ColumnDefinitions="472,25,*" Margin="10,30,10,10">
       <!-- Source Data Table -->
       <DataGrid HorizontalAlignment="Stretch" Height="715" VerticalScrollBarVisibility="Auto" Grid.Column="0" 
                 ItemsSource="{Binding HeatData}" 
@@ -86,7 +86,12 @@
       </DataGrid>
       
       <!-- Source Data Graphs -->
-      
+      <StackPanel Grid.Column="2" Orientation="Vertical">
+        <!-- Border CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1" -->
+          <ScottPlot:AvaPlot Margin="0,-15,0,0" HorizontalAlignment="Stretch" Height="350" Name="HeatPlot" />
+        <!-- /Border -->
+        <ScottPlot:AvaPlot Margin="0,15,0,0" HorizontalAlignment="Stretch" Height="350" Name="ElectricityPlot" />
+      </StackPanel>
     </Grid>
   </StackPanel>
 

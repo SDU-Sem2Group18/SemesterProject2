@@ -47,6 +47,15 @@ public class MainWindowViewModel : ViewModelBase
             var result = await ShowOpenGridDataDialog.Handle(open);
         });
 
+        if(Environment.OSVersion.Platform == PlatformID.Unix) {
+            WindowHeight = 835;
+            WindowWidth = 1440;
+        }
+        else {
+            WindowHeight = 800;
+            WindowWidth = 1400;
+        }
+
         // Initialising children view models of the next underlying layer
         MainMenu = new MainMenuViewModel();
         MainAppViewModel = new MainAppViewModel();
@@ -54,6 +63,7 @@ public class MainWindowViewModel : ViewModelBase
 
         // Setting default view model to MainMenuViewModel
         _contentViewModel = MainMenu;
+
     }
 
     // Defining children view models of the next underlying layer
@@ -65,6 +75,17 @@ public class MainWindowViewModel : ViewModelBase
     public ViewModelBase ContentViewModel {
         get => _contentViewModel;
         set => this.RaiseAndSetIfChanged(ref _contentViewModel, value);
+    }
+    private int windowHeight = 800;
+    public int WindowHeight {
+        get => windowHeight;
+        set => this.RaiseAndSetIfChanged(ref windowHeight, value);
+    }
+
+    private int windowWidth = 1400;
+    public int WindowWidth { 
+        get => windowWidth;
+        set => this.RaiseAndSetIfChanged(ref windowWidth, value);
     }
 
     // Defining button logic for main menu buttons

@@ -114,6 +114,23 @@ namespace Project.Modules
             CreatePlotVisualization(xData, yData, @"Data/ElectricityPrice.png", title, "Time", "Electricity Price (Kr)");
         }
 
+        public void CreateVisualisationFromResultData(ResultDataManager resultDataManager)
+        {
+            var resultDataList = resultDataManager.GetResultData();
+
+    // Extracting the x and y data from resultDataList
+            List<string> unitName = resultDataList.Select(data => data.UnitName).ToList();
+            List<double> producedHeatData = resultDataList.Select(data => (double)data.ProducedHeat).ToList();
+            List<double> producedElectricityData = resultDataList.Select(data => (double)data.ProducedElectricity).ToList();
+            List<double> consumedElectricityData = resultDataList.Select(data => (double)data.ConsumedElectricity).ToList();
+            List<double> energyConsumedData = resultDataList.Select(data => (double)data.EnergyConsumed).ToList();
+            List<double> co2EmissionsData = resultDataList.Select(data => (double)data.CO2Emissions).ToList();
+            List<double> productionCostData = resultDataList.Select(data => (double)data.ProductionCost).ToList();
+            List<double> profitData = resultDataList.Select(data => (double)data.Profit).ToList();
+
+    
+        }
+
         public void Dispose() {
             Dispose(true);
             GC.SuppressFinalize(this);

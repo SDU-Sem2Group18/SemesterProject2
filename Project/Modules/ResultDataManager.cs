@@ -141,7 +141,12 @@ namespace Project.Modules
     }
         }
 
-        public List<ResultData>? GetResultData(){
+        public List<ResultData>? GetResultData(AssetManager assetManager, SourceDataManager sourceDataManager){
+            var unitInfo = assetManager;
+            var heatInfo = sourceDataManager;
+            
+
+
             return ResultDataList;
         }
 
@@ -155,6 +160,11 @@ namespace Project.Modules
         protected bool Disposed {get; private set; }
         protected virtual void Dispose(bool disposing) {
             Disposed = true;
+        }
+
+        internal IEnumerable<ResultData> GetResultData()
+        {
+            throw new NotImplementedException();
         }
     }
 }

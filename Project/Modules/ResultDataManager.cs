@@ -26,27 +26,27 @@ namespace Project.Modules
 
             [Index(2)]
             [Name("Produced Electricity (MWh)")]
-            public float ProducedElectricity { get; set; }
+            [NullValues("-")]
+            public float? ProducedElectricity { get; set; }
 
             [Index(3)]
             [Name("Consumed Electricity (MWh)")]
-            public float ConsumedElectricity { get; set; }
+            [NullValues("-")]
+            public float? ConsumedElectricity { get; set; }
 
             [Index(4)]
             [Name("Energy Consumed (MWh)")]
-            public float EnergyConsumed { get; set; }
-            
+            [NullValues("-")]
+            public float? EnergyConsumed { get; set; }
             
             [Index(5)]
             [Name("CO2 Emissions (tonnes)")]
-            public float CO2Emissions { get; set; }
-            
-            
+            [NullValues("-")]
+            public float? CO2Emissions { get; set; }
             
             [Index(6)]
             [Name("Production Cost (Kr)")]
             public float ProductionCost { get; set; }
-            
             
             [Index(7)]
             [Name("Profit (Kr)")]

@@ -21,10 +21,10 @@ public partial class SourceDataView : UserControl
     public SourceDataView()
     {
         InitializeComponent();
-        MessageBus.Current.Listen<HeatDataLoadedMessage>().Subscribe(HandleMessage);
+        MessageBus.Current.Listen<HeatDataLoadedMessage>().Subscribe(HandleHeatDataLoadedMessage);
     }
 
-    private void HandleMessage(HeatDataLoadedMessage message) {
+    private void HandleHeatDataLoadedMessage(HeatDataLoadedMessage message) {
         Debug.WriteLine("Command Received");
         Dispatcher.UIThread.InvokeAsync(() => CreatePlotVisualization(message.Name, (message.xData, message.yData, message.title, message.xName, message.yName)));
     }

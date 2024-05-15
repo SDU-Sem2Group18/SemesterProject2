@@ -23,6 +23,13 @@ namespace Project.GUI.ViewModels
         // Constructor
         public SourceDataViewModel() {
             HeatData = new ObservableCollection<SourceDataManager.HeatData>();
+            MessageBus.Current.Listen<RefreshPlotsMessage>().Subscribe(HandleRefreshPlotsMessage);
+        }
+
+        private void HandleRefreshPlotsMessage(RefreshPlotsMessage message) {
+            if(sourceDataVisible) {
+                LoadSourceData();
+            }
         }
 
         // Properties related to the source data

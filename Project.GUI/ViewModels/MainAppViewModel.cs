@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using Project.GUI.Models;
 using ReactiveUI;
+using Tmds.DBus.Protocol;
 
 namespace Project.GUI.ViewModels
 {
@@ -71,6 +72,7 @@ namespace Project.GUI.ViewModels
             GridUnitButtonColour = Brush.Parse("#b5000c");
             SourceDataButtonColour = Brush.Parse("#800008");
             OptimiserButtonColour = Brush.Parse("#b5000c");
+            MessageBus.Current.SendMessage(new RefreshPlotsMessage());
         }
 
         public void OptimiserButton() {

@@ -145,7 +145,7 @@ namespace Project.Modules
                                 if(heatDemand <= limit) {
                                 productionUnitEmissionShare = (double)(heatDemand*productionUnitShare);
                                 consumingUnitEmissionShare = (double)(heatDemand*consumingUnitShare);
-                                emissionOptimisedCost = (double)(producingUnit.ProductionCost * productionUnitShare + (consumingUnit.ProductionCost + electricityPrice) * consumingUnitShare);
+                                emissionOptimisedCost = (double)(producingUnit.ProductionCost * productionUnitEmissionShare + (consumingUnit.ProductionCost + electricityPrice) * consumingUnitEmissionShare);
                             } else {
                                 productionUnitEmissionShare = (double)producingUnit.MaxHeat;
                                 consumingUnitEmissionShare = (double)(limit*consumingUnitShare + (heatDemand - limit));
@@ -225,8 +225,8 @@ namespace Project.Modules
             return ((null, null), (null, null), null, null);
         }
 
-        private ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? emissions) FindBestEmissionCombination(float heatDemand, float electricityPrice, List<AssetManager.UnitInformation> units, (AssetManager.UnitInformation? producingUnit, AssetManager.UnitInformation? consumingUnit, double? producingUnitShare, double? consumingUnitShare, double? cost) bestCostCombination) {
-            ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? cost) returnData = ((null, null), (null, null), null);
+        private ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? cost, double? emission) FindBestEmissionCombination(float heatDemand, float electricityPrice, List<AssetManager.UnitInformation> units, (AssetManager.UnitInformation? producingUnit, AssetManager.UnitInformation? consumingUnit, double? producingUnitShare, double? consumingUnitShare, double? cost) bestCostCombination) {
+            ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? cost, double? emission) returnData = ((null, null), (null, null), null, null);
             
             // First, Check all units to see if any single one is sufficient
             foreach(AssetManager.UnitInformation unit in units) {
@@ -234,17 +234,19 @@ namespace Project.Modules
                 else {
                     if(unit.MaxElectricity < 0) {
                     // Electricity Consuming Unit
-                        if(returnData.cost == null || (heatDemand * electricityPrice + unit.ProductionCost * heatDemand) < returnData.cost) returnData = ((unit, heatDemand), (null, null), (heatDemand * electricityPrice + unit.ProductionCost * heatDemand));
+                        if(returnData.emission == null || ((unit.Emissions == null ? 0 : unit.Emissions) * heatDemand) < returnData.emission) returnData = ((unit, heatDemand), (null, null), (heatDemand * electricityPrice + unit.ProductionCost * heatDemand), (double)(unit.Emissions == null ? 0 : unit.Emissions) * heatDemand);
                         else continue;
                     } else {
                     // All other units
-                        if(returnData.cost == null || (heatDemand * electricityPrice + unit.ProductionCost * heatDemand) < returnData.cost) returnData = ((unit, heatDemand), (null, null), (heatDemand * unit.ProductionCost));
+                        if(returnData.emission == null || ((unit.Emissions == null ? 0 : unit.Emissions) * heatDemand) < returnData.cost) returnData = ((unit, heatDemand), (null, null), (heatDemand * unit.ProductionCost), (double)(unit.Emissions == null ? 0 : unit.Emissions) * heatDemand);
                         else continue;
                     }
                 }
             }
             if(returnData.cost != null && returnData.cost <= bestCostCombination.cost) return returnData;
             else return returnData;
+
+            // TODO: Finish this method 
 
         }
     }

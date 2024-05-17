@@ -46,11 +46,12 @@ namespace Project.Modules
 
                 // 3. Get the results of the remaining units/combinations, including a possible producing/consuming unit if no combination exists
                 var bestTotalCostCombination = FindBestCostCombination(_.HeatDemand, _.ElectricityPrice, costUnitList, bestCostCombination);
+                var bestTotalEmissionCombination = FindBestEmissionCombination(_.HeatDemand, _.ElectricityPrice, emissionUnitList, bestEmissionCombination);
                 
                 Debug.WriteLine($"HeatDemand: {_.HeatDemand},\tElectricityPrice: {_.ElectricityPrice}");
-                if(bestTotalCostCombination.cost == null) Debug.WriteLine("!!! NO UNIT/COMBINATION CAN PRODUCE ENOUGH HEAT FOR THIS TIME. MANUAL INTERVENTION REQUIRED !!!\n");
-                else if(bestTotalCostCombination.unit2.unit == null) Debug.WriteLine($"Best Unit: {bestTotalCostCombination.unit1.unit!.Name}\nCost: {bestTotalCostCombination.cost}\nEmissions: {bestTotalCostCombination.emission}\n");
-                else Debug.WriteLine($"Best Combination: {bestTotalCostCombination.unit1.unit!.Name} ({bestTotalCostCombination.unit1.producedHeat}) + {bestTotalCostCombination.unit2.unit.Name} ({bestTotalCostCombination.unit2.producedHeat})\nCost: {bestTotalCostCombination.cost}\nEmissions: {bestTotalCostCombination.emission}\n");
+                if(bestTotalEmissionCombination.cost == null) Debug.WriteLine("!!! NO UNIT/COMBINATION CAN PRODUCE ENOUGH HEAT FOR THIS TIME. MANUAL INTERVENTION REQUIRED !!!\n");
+                else if(bestTotalEmissionCombination.unit2.unit == null) Debug.WriteLine($"Best Unit: {bestTotalEmissionCombination.unit1.unit!.Name}\nCost: {bestTotalEmissionCombination.cost}\nEmissions: {bestTotalEmissionCombination.emission}\n");
+                else Debug.WriteLine($"Best Combination: {bestTotalEmissionCombination.unit1.unit!.Name} ({bestTotalEmissionCombination.unit1.producedHeat}) + {bestTotalEmissionCombination.unit2.unit.Name} ({bestTotalEmissionCombination.unit2.producedHeat})\nCost: {bestTotalEmissionCombination.cost}\nEmissions: {bestTotalEmissionCombination.emission}\n");
 
             }
             return true;
@@ -225,7 +226,7 @@ namespace Project.Modules
             return ((null, null), (null, null), null, null);
         }
 
-        private ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? cost, double? emission) FindBestEmissionCombination(float heatDemand, float electricityPrice, List<AssetManager.UnitInformation> units, (AssetManager.UnitInformation? producingUnit, AssetManager.UnitInformation? consumingUnit, double? producingUnitShare, double? consumingUnitShare, double? cost) bestCostCombination) {
+        private ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? cost, double? emission) FindBestEmissionCombination(float heatDemand, float electricityPrice, List<AssetManager.UnitInformation> units, (AssetManager.UnitInformation? producingUnit, AssetManager.UnitInformation? consumingUnit, double? producingUnitShare, double? consumingUnitShare, double? cost, double? emission) bestCostCombination) {
             ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? cost, double? emission) returnData = ((null, null), (null, null), null, null);
             
             // First, Check all units to see if any single one is sufficient
@@ -244,10 +245,37 @@ namespace Project.Modules
                 }
             }
             if(returnData.cost != null && returnData.cost <= bestCostCombination.cost) return returnData;
-            else return returnData;
+            
+            // Second, Check all pairs of units, in both orders, for we are only checking max. Production capacity of one unit + remaining capacity of other unit
+            // This way, two units yield two combinations as opposed to one.
+            foreach(AssetManager.UnitInformation outerUnit in units) {
+                foreach(AssetManager.UnitInformation innerUnit in units) {
+                    if(outerUnit == innerUnit || outerUnit.MaxHeat + innerUnit.MaxHeat < heatDemand) continue;
+                    if(returnData.emission == null) {
+                        if(outerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == 0 ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * (electricityPrice + outerUnit.ProductionCost) + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        }
+                        else if(innerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == 0 ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * (electricityPrice + innerUnit.ProductionCost)), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        } else {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == 0 ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        }
+                    }
+                    else continue;
+                }
+            }
 
-            // TODO: Finish this method 
-
+            // Lastly, Check if the best combination here is more cost efficient than the combo of producing/consuming unit
+            if(returnData.emission != null && bestCostCombination.emission != null && returnData.emission < bestCostCombination.emission) return returnData;
+            else if(bestCostCombination.emission != null && (returnData.emission == null || bestCostCombination.emission <= returnData.emission)) return ((bestCostCombination.producingUnit, bestCostCombination.producingUnitShare), (bestCostCombination.consumingUnit, bestCostCombination.consumingUnitShare), bestCostCombination.cost, bestCostCombination.emission);
+            
+            return ((null, null), (null, null), null, null);
         }
     }
 }

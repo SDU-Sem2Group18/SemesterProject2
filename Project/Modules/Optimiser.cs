@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using CsvHelper;
+using CsvHelper.Configuration.Attributes;
 
 namespace Project.Modules
 {
@@ -14,6 +16,59 @@ namespace Project.Modules
             UnitInformation = unitInformation;
             HeatData = heatData;
         }
+
+        public struct OptimisedData {
+            [Name("Time from")]
+            [Format("dd/MM/yyyy HH:mm")]
+            public DateTime TimeFrom { get; set; }
+
+            [Name("Time to")]
+            [Format("dd/MM/yyyy HH:mm")]
+            public DateTime TimeTo { get; set; }
+
+            [Name("Heat Demand")]
+            public float HeatDemand { get; set; }
+
+            [Name("Electricity Price")]
+            public float ElectricityPrice { get; set; }
+
+            [Name("Unit 1")]
+            [NullValues("-")]
+            public string? Unit1Name { get; set; }
+
+            [Name("U1 Production")]
+            [NullValues("-")]
+            public float? Unit1Production { get; set; }
+            
+            [Name("Unit 2")]
+            [NullValues("-")]
+            public string? Unit2Name { get; set; }
+
+            [Name("U2 Production")]
+            [NullValues("-")]
+            public float? Unit2Production { get; set; }
+
+            [Name("Cost")]
+            [NullValues("-")]
+            public float? Cost { get; set; }
+
+            [Name("Emissions")]
+            [NullValues("-")]
+            public float? Emissions { get; set; }
+
+            public OptimisedData(DateTime timeFrom, DateTime timeTo, float heatDemand, float electricity, string? unit1Name, float? unit1Production, string? unit2Name, float? unit2Production, float? cost, float? emissions ) {
+                TimeFrom = timeFrom;
+                TimeTo = timeTo;
+                HeatDemand = heatDemand;
+                ElectricityPrice = electricity;
+                Unit1Name = unit1Name;
+                Unit1Production = unit1Production;
+                Unit2Name = unit2Name;
+                Unit2Production = unit2Production;
+                Cost = cost;
+                Emissions = emissions;
+            }
+        }
         
         public enum OptimisationArgument {
             CO2,
@@ -22,8 +77,16 @@ namespace Project.Modules
         
         private List<AssetManager.UnitInformation> UnitInformation;
         private List<SourceDataManager.HeatData> HeatData;
+        
+        public bool ExportToCSV(List<OptimisedData> data, OptimisationArgument arg) {
+            return true;
+        }
 
-        public bool Optimise(List<SourceDataManager.HeatData> heatData) {
+        public (List<OptimisedData> costOptimisedData, List<OptimisedData> emissionOptimisedData) Optimise(List<SourceDataManager.HeatData> heatData) {
+            // Return Lists
+            List<OptimisedData> costOptimisedData = new List<OptimisedData>();
+            List<OptimisedData> emissionOptimisedData = new List<OptimisedData>();
+            
             foreach(SourceDataManager.HeatData _ in heatData) {
                 // 1. Create two lists containing each production unit, one for cost and one for emission
                 List<AssetManager.UnitInformation> costUnitList = new List<AssetManager.UnitInformation>();
@@ -36,8 +99,6 @@ namespace Project.Modules
 
                 // 1.1 We start by finding the most efficient combination of electricity producing and consuming units, if they exist
                 (bestCostCombination, bestEmissionCombination) = OptimiseElectricityProducingAndConsumingUnits(_.HeatDemand, _.ElectricityPrice);
-                bool costCombinationFound = (bestCostCombination.consumingUnit != null) ? true : false;
-                bool emissionCombinationFound = (bestEmissionCombination.consumingUnit != null) ? true : false;
 
                 // 2. Delete the found combinations from each list
                 // ACTUALLY DON'T DO THIS - The producing/consuming units might still form a better combination with other units.
@@ -47,14 +108,85 @@ namespace Project.Modules
                 // 3. Get the results of the remaining units/combinations, including a possible producing/consuming unit if no combination exists
                 var bestTotalCostCombination = FindBestCostCombination(_.HeatDemand, _.ElectricityPrice, costUnitList, bestCostCombination);
                 var bestTotalEmissionCombination = FindBestEmissionCombination(_.HeatDemand, _.ElectricityPrice, emissionUnitList, bestEmissionCombination);
+
+                // Logic to add to cost List
+                if(bestTotalCostCombination.cost == null) costOptimisedData.Add(new(
+                    _.TimeFrom,
+                    _.TimeTo,
+                    _.HeatDemand,
+                    _.ElectricityPrice,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                )); else if(bestTotalCostCombination.unit2.unit == null) costOptimisedData.Add(new(
+                    _.TimeFrom,
+                    _.TimeTo,
+                    _.HeatDemand,
+                    _.ElectricityPrice,
+                    bestTotalCostCombination.unit1.unit!.Name,
+                    (float)bestTotalCostCombination.unit1.producedHeat!,
+                    null,
+                    null,
+                    (float)bestTotalCostCombination.cost,
+                    (float)bestTotalCostCombination.emission!
+                )); else costOptimisedData.Add(new(
+                    _.TimeFrom,
+                    _.TimeTo,
+                    _.HeatDemand,
+                    _.ElectricityPrice,
+                    bestTotalCostCombination.unit1.unit!.Name,
+                    (float)bestTotalCostCombination.unit1.producedHeat!,
+                    bestTotalCostCombination.unit2.unit!.Name,
+                    (float)bestTotalCostCombination.unit2.producedHeat!,
+                    (float)bestTotalCostCombination.cost,
+                    (float)bestTotalCostCombination.emission!
+                ));
+
+                if(bestTotalEmissionCombination.emission == null) emissionOptimisedData.Add(new(
+                    _.TimeFrom,
+                    _.TimeTo,
+                    _.HeatDemand,
+                    _.ElectricityPrice,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                )); else if(bestTotalEmissionCombination.unit2.unit == null) emissionOptimisedData.Add(new(
+                    _.TimeFrom,
+                    _.TimeTo,
+                    _.HeatDemand,
+                    _.ElectricityPrice,
+                    bestTotalEmissionCombination.unit1.unit!.Name,
+                    (float)bestTotalEmissionCombination.unit1.producedHeat!,
+                    null,
+                    null,
+                    (float)bestTotalEmissionCombination.cost!,
+                    (float)bestTotalEmissionCombination.emission!
+                )); else emissionOptimisedData.Add(new(
+                    _.TimeFrom,
+                    _.TimeTo,
+                    _.HeatDemand,
+                    _.ElectricityPrice,
+                    bestTotalEmissionCombination.unit1.unit!.Name,
+                    (float)bestTotalEmissionCombination.unit1.producedHeat!,
+                    bestTotalEmissionCombination.unit2.unit!.Name,
+                    (float)bestTotalEmissionCombination.unit2.producedHeat!,
+                    (float)bestTotalEmissionCombination.cost!,
+                    (float)bestTotalEmissionCombination.emission!
+                ));
                 
-                Debug.WriteLine($"HeatDemand: {_.HeatDemand},\tElectricityPrice: {_.ElectricityPrice}");
-                if(bestTotalEmissionCombination.cost == null) Debug.WriteLine("!!! NO UNIT/COMBINATION CAN PRODUCE ENOUGH HEAT FOR THIS TIME. MANUAL INTERVENTION REQUIRED !!!\n");
-                else if(bestTotalEmissionCombination.unit2.unit == null) Debug.WriteLine($"Best Unit: {bestTotalEmissionCombination.unit1.unit!.Name}\nCost: {bestTotalEmissionCombination.cost}\nEmissions: {bestTotalEmissionCombination.emission}\n");
-                else Debug.WriteLine($"Best Combination: {bestTotalEmissionCombination.unit1.unit!.Name} ({bestTotalEmissionCombination.unit1.producedHeat}) + {bestTotalEmissionCombination.unit2.unit.Name} ({bestTotalEmissionCombination.unit2.producedHeat})\nCost: {bestTotalEmissionCombination.cost}\nEmissions: {bestTotalEmissionCombination.emission}\n");
+                //Debug.WriteLine($"HeatDemand: {_.HeatDemand},\tElectricityPrice: {_.ElectricityPrice}");
+                //if(bestTotalEmissionCombination.cost == null) Debug.WriteLine("!!! NO UNIT/COMBINATION CAN PRODUCE ENOUGH HEAT FOR THIS TIME. MANUAL INTERVENTION REQUIRED !!!\n");
+                //else if(bestTotalEmissionCombination.unit2.unit == null) Debug.WriteLine($"Best Unit: {bestTotalEmissionCombination.unit1.unit!.Name}\nCost: {bestTotalEmissionCombination.cost}\nEmissions: {bestTotalEmissionCombination.emission}\n");
+                //else Debug.WriteLine($"Best Combination: {bestTotalEmissionCombination.unit1.unit!.Name} ({bestTotalEmissionCombination.unit1.producedHeat}) + {bestTotalEmissionCombination.unit2.unit.Name} ({bestTotalEmissionCombination.unit2.producedHeat})\nCost: {bestTotalEmissionCombination.cost}\nEmissions: {bestTotalEmissionCombination.emission}\n");
 
             }
-            return true;
+            return (costOptimisedData, emissionOptimisedData);
         } 
 
         private ((AssetManager.UnitInformation? producingUnit, AssetManager.UnitInformation? consumingUnit, double? producingUnitShare, double? consumingUnitShare, double? cost, double? emission), (AssetManager.UnitInformation? producingUnit, AssetManager.UnitInformation? consumingUnit, double? producingUnitShare, double? consumingUnitShare, double? cost, double? emission)) OptimiseElectricityProducingAndConsumingUnits(float heatDemand, float electricityPrice) {

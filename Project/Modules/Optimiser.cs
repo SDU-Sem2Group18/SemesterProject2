@@ -200,12 +200,27 @@ namespace Project.Modules
                 foreach(AssetManager.UnitInformation innerUnit in units) {
                     if(outerUnit == innerUnit || outerUnit.MaxHeat + innerUnit.MaxHeat < heatDemand) continue;
                     if(returnData.cost == null) {
-                        if(outerUnit.MaxElectricity < 0) {
+                        if(outerUnit.MaxElectricity != null && outerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * (electricityPrice + outerUnit.ProductionCost) + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        }
+                        else if(innerUnit.MaxElectricity != null && innerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * (electricityPrice + innerUnit.ProductionCost)), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        } else {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        }
+                    } else {
+                        if(outerUnit.MaxElectricity != null && outerUnit.MaxElectricity < 0) {
                             if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (electricityPrice + outerUnit.ProductionCost) + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost)) < returnData.cost) {
                                 returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * (electricityPrice + outerUnit.ProductionCost) + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
                             } else continue;
                         }
-                        else if(innerUnit.MaxElectricity < 0) {
+                        else if(innerUnit.MaxElectricity != null && innerUnit.MaxElectricity < 0) {
                             if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * (electricityPrice + innerUnit.ProductionCost))) < returnData.cost) {
                                 returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * (electricityPrice + innerUnit.ProductionCost)), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
                             } else continue;
@@ -215,7 +230,6 @@ namespace Project.Modules
                             } else continue;
                         }
                     }
-                    else continue;
                 }
             }
 
@@ -252,22 +266,36 @@ namespace Project.Modules
                 foreach(AssetManager.UnitInformation innerUnit in units) {
                     if(outerUnit == innerUnit || outerUnit.MaxHeat + innerUnit.MaxHeat < heatDemand) continue;
                     if(returnData.emission == null) {
-                        if(outerUnit.MaxElectricity < 0) {
-                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == 0 ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                        if(outerUnit.MaxElectricity != null && outerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat) {
                                 returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * (electricityPrice + outerUnit.ProductionCost) + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
                             } else continue;
                         }
-                        else if(innerUnit.MaxElectricity < 0) {
-                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == 0 ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                        else if(innerUnit.MaxElectricity != null && innerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat) {
                                 returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * (electricityPrice + innerUnit.ProductionCost)), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
                             } else continue;
                         } else {
-                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == 0 ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        }
+                    } else {
+                        if(outerUnit.MaxElectricity != null && outerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == null ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * (electricityPrice + outerUnit.ProductionCost) + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        }
+                        else if(innerUnit.MaxElectricity != null && innerUnit.MaxElectricity < 0) {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == null ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
+                                returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * (electricityPrice + innerUnit.ProductionCost)), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
+                            } else continue;
+                        } else {
+                            if(heatDemand > outerUnit.MaxHeat && heatDemand > innerUnit.MaxHeat && (outerUnit.MaxHeat * (outerUnit.Emissions == null ? 0 : outerUnit.Emissions) + ((heatDemand - outerUnit.MaxHeat) * (innerUnit.Emissions == null ? 0 : innerUnit.Emissions))) < (returnData.emission == null ? 0 : returnData.emission)) {
                                 returnData = ((outerUnit, outerUnit.MaxHeat), (innerUnit, heatDemand - outerUnit.MaxHeat), outerUnit.MaxHeat * outerUnit.ProductionCost + ((heatDemand - outerUnit.MaxHeat) * innerUnit.ProductionCost), outerUnit.MaxHeat * ((outerUnit.Emissions == null) ? 0 : outerUnit.Emissions) + (heatDemand - outerUnit.MaxHeat) * ((innerUnit.Emissions == null) ? 0 : innerUnit.Emissions));
                             } else continue;
                         }
                     }
-                    else continue;
                 }
             }
 

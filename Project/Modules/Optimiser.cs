@@ -17,7 +17,11 @@ namespace Project.Modules
             HeatData = heatData;
         }
 
-        public struct OptimisedData {
+        [Delimiter(",")]
+        [CultureInfo("dk-DK")]
+        [InjectionOptions(CsvHelper.Configuration.InjectionOptions.Exception)]
+        
+        public class OptimisedData {
             [Name("Time from")]
             [Format("dd/MM/yyyy HH:mm")]
             public DateTime TimeFrom { get; set; }
@@ -78,9 +82,6 @@ namespace Project.Modules
         private List<AssetManager.UnitInformation> UnitInformation;
         private List<SourceDataManager.HeatData> HeatData;
         
-        public bool ExportToCSV(List<OptimisedData> data, OptimisationArgument arg) {
-            return true;
-        }
 
         public (List<OptimisedData> costOptimisedData, List<OptimisedData> emissionOptimisedData) Optimise(List<SourceDataManager.HeatData> heatData) {
             // Return Lists

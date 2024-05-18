@@ -13,7 +13,18 @@ public class Program {
             heatDataList = sourceDataManager.GetHeatData();
         }
 
+        List<Optimiser.OptimisedData> costOptimisedDataList = new List<Optimiser.OptimisedData>();
+        List<Optimiser.OptimisedData> emissionOptimisedDataList = new List<Optimiser.OptimisedData>();
+
         Optimiser optimiser = new Optimiser(assetManager.UnitData, heatDataList);
-            optimiser.Optimise(heatDataList);
+        (costOptimisedDataList, emissionOptimisedDataList) = optimiser.Optimise(heatDataList);
+        
+        using(ResultDataManager costResultDataManager = new ResultDataManager(costOptimisedDataList, "Data/costOptimised.csv")) {
+            costResultDataManager.SaveResultData(true);
+        }
+        using(ResultDataManager emissionResultDataManager = new ResultDataManager(emissionOptimisedDataList, "Data/emissionOptimised.csv")) {
+            emissionResultDataManager.SaveResultData(true);
+        }
+
     }
 }

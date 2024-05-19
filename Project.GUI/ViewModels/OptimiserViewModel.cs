@@ -92,5 +92,16 @@ namespace Project.GUI.ViewModels
             OptimisedDataVisible = true;
         }
 
+        public void SaveCostFile(string fileName) {
+            using(ResultDataManager costResultDataManager = new ResultDataManager(CostOptimisedData.ToList(), fileName)) {
+                costResultDataManager.SaveResultData(true);
+            }
+        }
+
+        public void SaveEmissionFile(string fileName) {
+            using(ResultDataManager emissionResultDataManager = new ResultDataManager(EmissionOptimisedData.ToList(), fileName)) {
+                emissionResultDataManager.SaveResultData(true);
+            }
+        }
     }
 }

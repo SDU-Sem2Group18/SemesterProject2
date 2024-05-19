@@ -66,7 +66,7 @@
         <StackPanel Orientation="Vertical" Grid.Row="0">
           <StackPanel Orientation="Horizontal">
             <Label FontWeight="SemiBold" FontSize="30">Cost Optimisation</Label>
-            <Button Height="37" Width="120" Margin="10,0,0,0" Command="">
+            <Button Height="37" Width="120" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SaveCostOptimisationCommand}">
               <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center">Export to CSV</Label>
             </Button>
           </StackPanel>
@@ -102,7 +102,7 @@
         <StackPanel Orientation="Vertical" Grid.Row="2">
           <StackPanel Orientation="Horizontal">
             <Label FontWeight="SemiBold" FontSize="30">Emission Optimisation</Label>
-            <Button Height="37" Width="120" Margin="10,0,0,0" Command="">
+            <Button Height="37" Width="120" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SaveEmissionOptimisationCommand}">
               <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center">Export to CSV</Label>
             </Button>
           </StackPanel>

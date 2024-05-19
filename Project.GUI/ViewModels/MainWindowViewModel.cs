@@ -17,10 +17,14 @@ public class MainWindowViewModel : ViewModelBase
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenSourceDataDialog { get; }
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenUnitDataDialog { get; }
     public Interaction<OpenProjectViewModel, System.Uri?> ShowOpenGridDataDialog { get; }
+    public Interaction<OpenProjectViewModel, System.Uri?> ShowSaveCostOptimisationDialog { get; }
+    public Interaction<OpenProjectViewModel, System.Uri?> ShowSaveEmissionOptimisationDialog { get; }
     public ICommand OpenProjectCommand { get; }
     public ICommand OpenSourceDataCommand { get; }
     public ICommand OpenUnitDataCommand { get; }
     public ICommand OpenGridDataCommand { get; }
+    public ICommand SaveCostOptimisationCommand { get; }
+    public ICommand SaveEmissionOptimisationCommand { get; }
 
     // Constructor
     public MainWindowViewModel() {
@@ -29,6 +33,8 @@ public class MainWindowViewModel : ViewModelBase
         ShowOpenSourceDataDialog = new Interaction<OpenProjectViewModel, Uri?>();
         ShowOpenUnitDataDialog =   new Interaction<OpenProjectViewModel, Uri?>();
         ShowOpenGridDataDialog =   new Interaction<OpenProjectViewModel, Uri?>();
+        ShowSaveCostOptimisationDialog = new Interaction<OpenProjectViewModel, Uri?>();
+        ShowSaveEmissionOptimisationDialog = new Interaction<OpenProjectViewModel, Uri?>();
 
         OpenProjectCommand = ReactiveCommand.CreateFromTask(async () => {
             var open = new OpenProjectViewModel();
@@ -45,6 +51,14 @@ public class MainWindowViewModel : ViewModelBase
         OpenGridDataCommand = ReactiveCommand.CreateFromTask(async () => {
             var open = new OpenProjectViewModel();
             var result = await ShowOpenGridDataDialog.Handle(open);
+        });
+        SaveCostOptimisationCommand = ReactiveCommand.CreateFromTask(async () => {
+            var open = new OpenProjectViewModel();
+            var result = await ShowSaveCostOptimisationDialog.Handle(open);
+        });
+        SaveEmissionOptimisationCommand = ReactiveCommand.CreateFromTask(async () => {
+            var open = new OpenProjectViewModel();
+            var result = await ShowSaveEmissionOptimisationDialog.Handle(open);
         });
 
         if(Environment.OSVersion.Platform == PlatformID.Unix) {

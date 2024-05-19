@@ -90,6 +90,7 @@ public partial class SourceDataView : UserControl
         avaPlot.Plot.Legend.Alignment = Alignment.LowerLeft;
         avaPlot.Plot.Legend.FontSize = 12;
         PlotHelper.SetPlotTypeface(avaPlot);
+        avaPlot.Interaction.Disable();
         avaPlot.Refresh();
     }
 }

@@ -80,6 +80,7 @@ namespace Project.GUI.ViewModels
             GridUnitButtonColour = Brush.Parse("#b5000c");
             SourceDataButtonColour = Brush.Parse("#b5000c");
             OptimiserButtonColour = Brush.Parse("#800008");
+            MessageBus.Current.SendMessage(new RefreshOptimiserPlotsMessage());
         }
 
     }

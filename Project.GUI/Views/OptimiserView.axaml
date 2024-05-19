@@ -2,7 +2,138 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Project.GUI.ViewModels"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+             xmlns:local="clr-namespace:Project.GUI.Models;assembly=Project.GUI"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
-             x:Class="Project.GUI.Views.OptimiserView">
-  <Label Foreground="Black">OptimiserView</Label>
+             x:Class="Project.GUI.Views.OptimiserView"
+             x:DataType="vm:OptimiserViewModel"
+             >
+  
+  <UserControl.Resources>
+    <local:WhiteSpaceAlignmentConverter x:Key="whiteSpaceConverter" />
+    <local:BooleanInverterConverter x:Key="BooleanInverterConverter" /> 
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="Label">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="Background" Value="#b5000c" />
+      <Style Selector="^:pointerover /template/ ContentPresenter">
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#800008" />
+      </Style>
+    </Style>
+    <Style Selector="DataGrid">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+      <Setter Property="VerticalGridLinesBrush" Value="#d1d1d1" />
+      <Setter Property="HorizontalGridLinesBrush" Value="#d1d1d1" />
+    </Style>
+    <Style Selector="DataGrid TextBlock">
+      <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+      <Setter Property="FontFamily" Value="Roboto Mono" />
+    </Style>
+    <Style Selector="DataGridRow">
+      <Style Selector="^:selected DataGridCell">
+        <Setter Property="Background" Value="#dd666e" />
+      </Style>
+    </Style>
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="Background" Value="#b5000c" />
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="SeparatorBrush" Value="#e4e4e4" />
+    </Style>
+    <Style Selector="DataGridColumnHeader TextBlock"> 
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontFamily" Value="Noto" />
+    </Style>
+  </UserControl.Styles>
+
+  <!-- Main Content --> 
+  <Grid RowDefinitions="765" Background="#ffffff">
+    <!-- Panel for Optimiser Button -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,0" IsVisible="{Binding OptimisedDataVisible, Converter={StaticResource BooleanInverterConverter}}">
+      <Label FontWeight="SemiBold" FontSize="25" Content="{Binding OptimiserStatusText}"/>
+    </StackPanel>
+
+    <!-- Data Visualisation -->
+    <ScrollViewer Margin="10,10,0,-10" Grid.Row="0" Height="765" IsVisible="{Binding OptimisedDataVisible}" VerticalScrollBarVisibility="Visible">
+      <Grid RowDefinitions="765,20,765">
+        <!-- Cost Optimisation -->
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+          <StackPanel Orientation="Horizontal">
+            <Label FontWeight="SemiBold" FontSize="30">Cost Optimisation</Label>
+            <Button Height="37" Width="120" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SaveCostOptimisationCommand}">
+              <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center">Export to CSV</Label>
+            </Button>
+          </StackPanel>
+
+          <StackPanel Orientation="Vertical">
+            <ScottPlot:AvaPlot Margin="10,20,30,00" HorizontalAlignment="Stretch" Height="275" Name="CostPlot" />
+            <DataGrid Margin="10,10,40,10" HorizontalAlignment="Stretch" Height="385" VerticalScrollBarVisibility="Auto"
+                      ItemsSource="{Binding CostOptimisedData}"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="False"
+                      CanUserSortColumns="False"
+                      BorderThickness="1"
+                      BorderBrush="#1d1d1d">
+              <DataGrid.Columns>
+                <DataGridTextColumn Width="110" Header="From (Date and Time)" Binding="{Binding TimeFrom, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+                <DataGridTextColumn Width="110" Header="To (Date and Time)" Binding="{Binding TimeTo, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+                <DataGridTextColumn Width="125" Header="Heat Demand (MWh)" Binding="{Binding HeatDemand, Converter={StaticResource whiteSpaceConverter}, ConverterParameter=5}}" />
+                <DataGridTextColumn Width="125" Header="El. Price (DKK/MWh)" Binding="{Binding ElectricityPrice, Converter={StaticResource whiteSpaceConverter}, ConverterParameter=7}}" />
+                <DataGridTextColumn Width="110" Header="Unit 1 Name" Binding="{Binding Unit1Name}" />
+                <DataGridTextColumn Width="115" Header="Unit 1 Prod. (MWh)" Binding="{Binding Unit1Production}" />
+                <DataGridTextColumn Width="110" Header="Unit 2 Name" Binding="{Binding Unit2Name}" />
+                <DataGridTextColumn Width="115" Header="Unit 2 Prod. (MWh)" Binding="{Binding Unit2Production}" />
+                <DataGridTextColumn Width="115" Header="Cost (DKK/MWh)" Binding="{Binding Cost}" />
+                <DataGridTextColumn Width="119" Header="Emissions (Kg/MWh)" Binding="{Binding Emissions}" />
+              </DataGrid.Columns>
+            </DataGrid>
+          </StackPanel>
+        </StackPanel>
+
+          <!-- Emission Optimisation -->
+        <StackPanel Orientation="Vertical" Grid.Row="2">
+          <StackPanel Orientation="Horizontal">
+            <Label FontWeight="SemiBold" FontSize="30">Emission Optimisation</Label>
+            <Button Height="37" Width="120" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SaveEmissionOptimisationCommand}">
+              <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center">Export to CSV</Label>
+            </Button>
+          </StackPanel>
+
+          <StackPanel Orientation="Vertical">
+            <ScottPlot:AvaPlot Margin="10,20,30,20" HorizontalAlignment="Stretch" Height="275" Name="EmissionPlot" />
+            <DataGrid Margin="10,10,40,20" HorizontalAlignment="Stretch" Height="385" VerticalScrollBarVisibility="Auto"
+                      ItemsSource="{Binding EmissionOptimisedData}"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="False"
+                      CanUserSortColumns="False"
+                      BorderThickness="1"
+                      BorderBrush="#1d1d1d">
+              <DataGrid.Columns>
+                <DataGridTextColumn Width="110" Header="From (Date and Time)" Binding="{Binding TimeFrom, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+                <DataGridTextColumn Width="110" Header="To (Date and Time)" Binding="{Binding TimeTo, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+                <DataGridTextColumn Width="125" Header="Heat Demand (MWh)" Binding="{Binding HeatDemand, Converter={StaticResource whiteSpaceConverter}, ConverterParameter=5}}" />
+                <DataGridTextColumn Width="125" Header="El. Price (DKK/MWh)" Binding="{Binding ElectricityPrice, Converter={StaticResource whiteSpaceConverter}, ConverterParameter=7}}" />
+                <DataGridTextColumn Width="110" Header="Unit 1 Name" Binding="{Binding Unit1Name}" />
+                <DataGridTextColumn Width="115" Header="Unit 1 Prod. (MWh)" Binding="{Binding Unit1Production}" />
+                <DataGridTextColumn Width="110" Header="Unit 2 Name" Binding="{Binding Unit2Name}" />
+                <DataGridTextColumn Width="115" Header="Unit 2 Prod. (MWh)" Binding="{Binding Unit2Production}" />
+                <DataGridTextColumn Width="115" Header="Cost (DKK/MWh)" Binding="{Binding Cost}" />
+                <DataGridTextColumn Width="119" Header="Emissions (Kg/MWh)" Binding="{Binding Emissions}" />
+              </DataGrid.Columns>
+            </DataGrid>
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </Grid>
 </UserControl>

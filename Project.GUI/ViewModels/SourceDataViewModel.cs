@@ -72,6 +72,7 @@ namespace Project.GUI.ViewModels
                     Debug.WriteLine("Sending Command");
                     MessageBus.Current.SendMessage(new HeatDataLoadedMessage("ElectricityPlot", (xData, yData, title, "Date & Time", "Electricity Price (Kr)")));
                     SourceDataVisible = true;
+                    MessageBus.Current.SendMessage(new HeatDataAvailableMessage(HeatData.ToList()));
                 }
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);

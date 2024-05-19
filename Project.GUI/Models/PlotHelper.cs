@@ -8,6 +8,10 @@ using SkiaSharp;
 namespace Project.GUI.Models;
 
 // https://github.com/ScottPlot/ScottPlot/issues/3722
+// Credits to https://github.com/kebox7, fairly modified by me
+// Deprecated as of 04.05.2024, as setting fontface was added to ScottPlot 5.0.34 (we use 5.0.32)
+// For the purposes of showcase, this will remain and be used as a reference to its necessity when I added and adapted it for my own needs.
+// - Nick
 public static class PlotHelper {
     private static readonly FieldInfo? LabelCachedTypeface = typeof(ScottPlot.Label).GetField("CachedTypeface", BindingFlags.NonPublic | BindingFlags.Instance);
     private static readonly SKTypeface? NotoSemiBold = CreateTypeface("NotoSans-SemiBold.ttf");

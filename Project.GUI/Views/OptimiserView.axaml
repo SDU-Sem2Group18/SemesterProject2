@@ -2,7 +2,63 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Project.GUI.ViewModels"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+             xmlns:local="clr-namespace:Project.GUI.Models;assembly=Project.GUI"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
-             x:Class="Project.GUI.Views.OptimiserView">
-  <Label Foreground="Black">OptimiserView</Label>
+             x:Class="Project.GUI.Views.OptimiserView"
+             x:DataType="vm:OptimiserViewModel"
+             >
+  
+  <UserControl.Resources>
+    <local:WhiteSpaceAlignmentConverter x:Key="whiteSpaceConverter" />
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="Label">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="Background" Value="#b5000c" />
+      <Style Selector="^:pointerover /template/ ContentPresenter">
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#800008" />
+      </Style>
+    </Style>
+    <Style Selector="DataGrid">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+      <Setter Property="VerticalGridLinesBrush" Value="#d1d1d1" />
+      <Setter Property="HorizontalGridLinesBrush" Value="#d1d1d1" />
+    </Style>
+    <Style Selector="DataGrid TextBlock">
+      <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+      <Setter Property="FontFamily" Value="Roboto Mono" />
+    </Style>
+    <Style Selector="DataGridRow">
+      <Style Selector="^:selected DataGridCell">
+        <Setter Property="Background" Value="#dd666e" />
+      </Style>
+    </Style>
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="Background" Value="#b5000c" />
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="SeparatorBrush" Value="#e4e4e4" />
+    </Style>
+    <Style Selector="DataGridColumnHeader TextBlock"> 
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontFamily" Value="Noto" />
+    </Style>
+  </UserControl.Styles>
+
+  <!-- Main Content --> 
+  <Grid RowDefinitions="*, 755" Background="#ffffff">
+    <!-- Panel for Optimiser Button -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,0">
+      <Label FontWeight="SemiBold" FontSize="25" Content="{Binding OptimiserStatusText}"/>
+      <Button Height="37" Width="90" Margin="10,0,0,0" IsEnabled="{Binding OptimiserButtonActive}" Command="">
+        <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Optimise</Label>
+      </Button>
+    </StackPanel>
+  </Grid>
 </UserControl>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using ReactiveUI;
 using Project.Modules;
+using Project.GUI.Models;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -73,6 +74,7 @@ namespace Project.GUI.ViewModels
                 Debug.WriteLine("AssetManager created");
                 GridInfo = GridUnitAssetManager.Grid;
                 GridDataHeaderVisible = true;
+                SenddataLoadedMessage();
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);
                 GridSourcePath = "Error parsing grid data";
@@ -102,12 +104,17 @@ namespace Project.GUI.ViewModels
                 }
                 foreach(AssetManager.UnitInformation _ in unitData) UnitData.Add(_);
                 UnitDataHeaderVisible = true;
+                SenddataLoadedMessage();
                 
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);
                 UnitSourcePath = "Error parsing source data";
                 UnitSourcePathTextColour = Brush.Parse("#b5000c");
             }
+        }
+
+        private void SenddataLoadedMessage() {
+            if(GridDataHeaderVisible && UnitDataHeaderVisible) MessageBus.Current.SendMessage(new GridAndUnitDataAvailableMessage());
         }
 
     }

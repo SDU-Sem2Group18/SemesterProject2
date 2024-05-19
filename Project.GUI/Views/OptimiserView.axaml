@@ -56,7 +56,7 @@
     <!-- Panel for Optimiser Button -->
     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,0">
       <Label FontWeight="SemiBold" FontSize="25" Content="{Binding OptimiserStatusText}"/>
-      <Button Height="37" Width="90" Margin="10,0,0,0" IsEnabled="{Binding OptimiserButtonActive}" Command="">
+      <Button Height="37" Width="90" Margin="10,0,0,0" IsEnabled="{Binding OptimiserButtonActive}" Command="{Binding OptimiseButtonClicked}">
         <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Optimise</Label>
       </Button>
     </StackPanel>

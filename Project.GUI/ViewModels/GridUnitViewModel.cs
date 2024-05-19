@@ -114,7 +114,7 @@ namespace Project.GUI.ViewModels
         }
 
         private void SenddataLoadedMessage() {
-            if(GridDataHeaderVisible && UnitDataHeaderVisible) MessageBus.Current.SendMessage(new GridAndUnitDataAvailableMessage());
+            if(GridDataHeaderVisible && UnitDataHeaderVisible) MessageBus.Current.SendMessage(new GridAndUnitDataAvailableMessage(UnitData.ToList()));
         }
 
     }

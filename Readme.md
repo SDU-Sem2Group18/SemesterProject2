@@ -5,8 +5,11 @@
 <h4> Syddansk Universitet Sønderborg</h3>
 <h6> Summer Semester 2024, Group 18 - Niklas Braun & Rokas Norbutas</h6>
 
+#
 
 **Project Goal:** Given Data about Production Units, as well as hourly Heat Demand and Electricity Price, create a Desktop Application to optimise the given Data, both for Cost and Emissions.
+
+#
 
 ### To Run
 ```bash

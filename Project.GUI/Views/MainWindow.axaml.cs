@@ -12,7 +12,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Project.GUI.Models;
 using Project.GUI.ViewModels;
 using Project.Modules;

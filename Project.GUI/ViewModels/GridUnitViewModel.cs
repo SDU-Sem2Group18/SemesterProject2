@@ -9,7 +9,6 @@ using Project.Modules;
 using Project.GUI.Models;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Avalonia.Interactivity;

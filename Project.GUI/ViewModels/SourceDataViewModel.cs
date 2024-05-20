@@ -24,6 +24,7 @@ namespace Project.GUI.ViewModels
         public SourceDataViewModel() {
             HeatData = new ObservableCollection<SourceDataManager.HeatData>();
             MessageBus.Current.Listen<RefreshPlotsMessage>().Subscribe(HandleRefreshPlotsMessage);
+            internalSourcePath = "";
         }
 
         private void HandleRefreshPlotsMessage(RefreshPlotsMessage message) {

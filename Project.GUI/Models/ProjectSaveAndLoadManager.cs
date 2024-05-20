@@ -49,7 +49,7 @@ namespace Project.GUI.Models
         public ProjectData CurrentChanges;
         public ProjectData SavedChanges;
 
-        private bool openedFromMainMenu;
+        public bool openedFromMainMenu;
 
         public ProjectSaveAndLoadManager() {
             CurrentChanges = new ProjectData(null, null, null, null, null);

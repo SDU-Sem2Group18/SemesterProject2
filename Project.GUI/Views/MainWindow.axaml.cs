@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -13,6 +15,7 @@ using Avalonia.ReactiveUI;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Project.GUI.Models;
 using Project.GUI.ViewModels;
+using Project.Modules;
 using ReactiveUI;
 
 namespace Project.GUI.Views;
@@ -57,6 +60,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             Debug.WriteLine("Opening Project");
             (_successLoadingProject, _tempPath, _gridDataPath, _unitDataPath, _sourceDataPath) = ViewModel!.ProjectSaveAndLoadManager.ReadProjectFromFile(files[0].Path.AbsolutePath.Replace("%20", " "));
             if(_successLoadingProject) {
+                //if(ViewModel!.ProjectSaveAndLoadManager.openedFromMainMenu)
                 if(_gridDataPath != null) {
                     ViewModel!.MainAppViewModel.GridUnit.internalGridSourcePath = _gridDataPath!;
                     ViewModel!.MainAppViewModel.GridUnit.LoadGridData();
@@ -65,6 +69,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
                 if(_unitDataPath != null) {
                     ViewModel!.MainAppViewModel.GridUnit.internalUnitSourcePath = _unitDataPath!;
+                    ViewModel!.MainAppViewModel.GridUnit.UnitData = new ObservableCollection<AssetManager.UnitInformation>();
                     ViewModel!.MainAppViewModel.GridUnit.LoadUnitData();
                     ViewModel!.MainAppViewModel.GridUnit.UnitSourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
                 }

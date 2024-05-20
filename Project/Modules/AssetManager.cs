@@ -52,6 +52,7 @@ namespace Project.Modules
             [NullValues("-")]
             public float? Emissions { get; set; }
 
+            [Ignore]
             public string SelfPath { get; set;}
             public void SetSelfPath(string path) {
                 SelfPath = path;

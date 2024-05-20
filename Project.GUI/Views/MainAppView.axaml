@@ -30,7 +30,7 @@
 
       <!-- Bottom Command Buttons -->
       <StackPanel Grid.Row="2" Width="200">
-        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c">
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SaveProjectCommand}">
           <StackPanel Width="200" Orientation="Horizontal">
             <Image Height="35" Source="{SvgImage /Assets/new-file-white.svg}" Margin="10,0,5,0" />
             <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Save...</Label>  

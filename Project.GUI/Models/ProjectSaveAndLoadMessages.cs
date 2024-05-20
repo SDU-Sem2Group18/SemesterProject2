@@ -24,7 +24,6 @@ namespace Project.GUI.Models
             HeatData = heatData;
         }
     }
-
     public class ChangesMadeMessage {
         public ChangesMadeMessage() { }
     }

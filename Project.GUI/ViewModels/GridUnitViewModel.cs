@@ -22,9 +22,12 @@ namespace Project.GUI.ViewModels
         // Constructor
         public GridUnitViewModel() {
             UnitData = new ObservableCollection<AssetManager.UnitInformation>();
+            internalGridSourcePath = "";
+            internalUnitSourcePath = "";
         }
 
         // Unit Data Source Path
+        public string internalUnitSourcePath { get; set; }
         private string unitSourcePath = "Use the load button to open unit data";
         public string UnitSourcePath {
             get => unitSourcePath;
@@ -37,6 +40,7 @@ namespace Project.GUI.ViewModels
         }
 
         // Grid Data Source Path and Colour
+        public string internalGridSourcePath { get; set; }
         private string gridSourcePath = "Use the load button to open grid data";
         public string GridSourcePath {
             get => gridSourcePath;
@@ -70,10 +74,11 @@ namespace Project.GUI.ViewModels
             Debug.WriteLine("Loading Grid Data");
             GridSourcePathTextColour = Brush.Parse("#1d1d1d");
             try {
-                GridUnitAssetManager = new AssetManager(GridSourcePath, "");
+                GridUnitAssetManager = new AssetManager(internalGridSourcePath, "");
                 Debug.WriteLine("AssetManager created");
                 GridInfo = GridUnitAssetManager.Grid;
                 GridDataHeaderVisible = true;
+                GridSourcePath = internalGridSourcePath;
                 MessageBus.Current.SendMessage(new GridDataMessage(GridUnitAssetManager));
                 SenddataLoadedMessage();
             } catch (Exception e) {
@@ -94,17 +99,18 @@ namespace Project.GUI.ViewModels
             UnitSourcePathTextColour = Brush.Parse("#1d1d1d");
             try {
                 Debug.WriteLine(UnitSourcePath);
-                if(GridSourcePath != "Use the load button to open grid data") GridUnitAssetManager = new AssetManager(GridSourcePath, UnitSourcePath);
-                else GridUnitAssetManager = new AssetManager("", UnitSourcePath);
+                if(GridSourcePath != "Use the load button to open grid data") GridUnitAssetManager = new AssetManager(internalGridSourcePath, internalUnitSourcePath);
+                else GridUnitAssetManager = new AssetManager("", internalUnitSourcePath);
                 List<AssetManager.UnitInformation> unitData = new List<AssetManager.UnitInformation>();
                 
                 Debug.WriteLine("SourceDataManager created");
                 foreach(AssetManager.UnitInformation _ in GridUnitAssetManager.UnitData) {
-                    _.SetSelfPath(UnitSourcePath);
+                    _.SetSelfPath(internalUnitSourcePath);
                     unitData.Add(_);
                 }
                 foreach(AssetManager.UnitInformation _ in unitData) UnitData.Add(_);
                 UnitDataHeaderVisible = true;
+                UnitSourcePath = internalUnitSourcePath;
                 MessageBus.Current.SendMessage(new UnitDataMessage(UnitData.ToList()));
                 SenddataLoadedMessage();
                 

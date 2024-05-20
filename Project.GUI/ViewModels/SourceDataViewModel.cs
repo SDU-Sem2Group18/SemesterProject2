@@ -38,6 +38,8 @@ namespace Project.GUI.ViewModels
             get => sourceDataVisible;
             set => this.RaiseAndSetIfChanged(ref sourceDataVisible, value);
         }
+
+        public string internalSourcePath { get; set; }
         private string sourcePath = "Use the load button to open source data";
         public string SourcePath {
             get => sourcePath;
@@ -54,8 +56,8 @@ namespace Project.GUI.ViewModels
         public void LoadSourceData() {
             SourcePathTextColour = Brush.Parse("#1d1d1d");
             try {
-                Debug.WriteLine(SourcePath);
-                using (SourceDataManager sourceDataManager = new SourceDataManager(SourcePath)) {
+                Debug.WriteLine(internalSourcePath);
+                using (SourceDataManager sourceDataManager = new SourceDataManager(internalSourcePath)) {
                     List<SourceDataManager.HeatData> heatData = sourceDataManager.GetHeatData();
                     Debug.WriteLine("SourceDataManager created");
                     if(HeatData.Count != 0) HeatData.Clear();

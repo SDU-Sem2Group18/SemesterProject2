@@ -127,6 +127,7 @@ public class MainWindowViewModel : ViewModelBase
     // Defining button logic for main menu buttons
     public void NewProjectButton() {
         MainAppViewModel.Reset();
+        ProjectSaveAndLoadManager = new ProjectSaveAndLoadManager();
         ContentViewModel = MainAppViewModel;
     }
 

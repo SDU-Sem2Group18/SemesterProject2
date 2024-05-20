@@ -11,6 +11,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Project.GUI.Models;
 using Project.GUI.ViewModels;
 using ReactiveUI;
 
@@ -45,8 +46,40 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             AllowMultiple = false,
         });
 
-        if(files.Count >= 1) interaction.SetOutput(files[0].Path);
-        else interaction.SetOutput(null);
+        if(files.Count >= 1) {
+            bool _successLoadingProject;
+            string? _tempPath;
+            string? _gridDataPath;
+            string? _unitDataPath;
+            string? _sourceDataPath;
+
+            Debug.WriteLine("--- LOADING DATA FROM FILE ---");
+            Debug.WriteLine("Opening Project");
+            (_successLoadingProject, _tempPath, _gridDataPath, _unitDataPath, _sourceDataPath) = ViewModel!.ProjectSaveAndLoadManager.ReadProjectFromFile(files[0].Path.AbsolutePath.Replace("%20", " "));
+            if(_successLoadingProject) {
+                if(_gridDataPath != null) {
+                    ViewModel!.MainAppViewModel.GridUnit.internalGridSourcePath = _gridDataPath!;
+                    ViewModel!.MainAppViewModel.GridUnit.LoadGridData();
+                    ViewModel!.MainAppViewModel.GridUnit.GridSourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
+                } 
+
+                if(_unitDataPath != null) {
+                    ViewModel!.MainAppViewModel.GridUnit.internalUnitSourcePath = _unitDataPath!;
+                    ViewModel!.MainAppViewModel.GridUnit.LoadUnitData();
+                    ViewModel!.MainAppViewModel.GridUnit.UnitSourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
+                }
+                
+                if(_sourceDataPath != null) {
+                    ViewModel!.MainAppViewModel.SourceData.internalSourcePath = _sourceDataPath!;
+                    ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+                    ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
+                }
+
+                if(ViewModel!.ContentViewModel != ViewModel!.MainAppViewModel) ViewModel!.ContentViewModel = ViewModel!.MainAppViewModel;
+                interaction.SetOutput(files[0].Path);
+            }
+            else interaction.SetOutput(null);
+        }
     }
 
     private async void DoShowSaveProjectDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
@@ -61,7 +94,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             string returnFile;
             if(file.TryGetLocalPath() == null) returnFile = file.Path.AbsolutePath.Replace("%20", " ");
             else returnFile = file.TryGetLocalPath()!.Replace("%20", " ");
-            ViewModel!.ProjectSaveAndLoadManager.SaveProject(returnFile);
+            bool success = ViewModel!.ProjectSaveAndLoadManager.SaveProject(returnFile);
         }
     }
 
@@ -91,7 +124,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         if(files.Count >= 1) {
             interaction.SetOutput(files[0].Path);
             if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
-            else ViewModel!.MainAppViewModel.GridUnit.UnitSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
+            else ViewModel!.MainAppViewModel.GridUnit.internalUnitSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
             ViewModel!.MainAppViewModel.GridUnit.LoadUnitData();
         }
     }
@@ -106,7 +139,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         if(files.Count >= 1) {
             interaction.SetOutput(files[0].Path);
             if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
-            else ViewModel!.MainAppViewModel.GridUnit.GridSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
+            else ViewModel!.MainAppViewModel.GridUnit.internalGridSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
             ViewModel!.MainAppViewModel.GridUnit.LoadGridData();
         }
     }

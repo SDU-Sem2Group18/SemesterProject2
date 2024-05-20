@@ -13,6 +13,8 @@ using System.Runtime.Serialization;
 using System.Diagnostics;
 using Avalonia.Data.Converters;
 using System.Globalization;
+using System.Text.Json;
+using CsvHelper;
 
 namespace Project.GUI.Models
 {
@@ -83,7 +85,7 @@ namespace Project.GUI.Models
         private IValueConverter imagePathConverter = new ImagePathConverter();
 
         // https://www.codeproject.com/Articles/11271/Read-and-Write-Structures-to-Files-with-NET
-        public void SaveProject(string fileName) {
+        public bool SaveProject(string fileName) {
             try {
                 CurrentChanges.FilePath = fileName;
                 CurrentChanges.FileName = Path.GetFileName(fileName);
@@ -93,26 +95,94 @@ namespace Project.GUI.Models
                 writer.Close();
 
                 SavedChanges = CurrentChanges;
+                return true;
             } catch (Exception) {
-                throw;
+                return false;
             }
         }
-        public void ReadProjectFromFile(string fileName) {
-            byte[] buffer = new byte[Marshal.SizeOf(SavedChanges)];
-            ProjectData? returnObject = null;
+        public (bool, string?, string?, string?, string?) ReadProjectFromFile(string fileName) {
             try {
-                using(FileStream _fs = new FileStream(fileName, FileMode.Open)) {
-                    _fs.Read(buffer, 0, buffer.Length);
-                    GCHandle h = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-                    returnObject = (ProjectData)Marshal.PtrToStructure(h.AddrOfPinnedObject(), typeof(ProjectData))!;
-                    h.Free();
-                    if(_fs.Position >= _fs.Length) _fs.Close();
-                }
+                CurrentChanges.FilePath = fileName;
+                CurrentChanges.FileName = Path.GetFileName(fileName);
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProjectData));
+                StreamReader reader = new StreamReader(File.OpenRead(fileName));
+                object? returnObject = xmlSerializer.Deserialize(reader);
 
-                CurrentChanges = (ProjectData)returnObject;
-                SavedChanges = (ProjectData)returnObject;
+                string? _tempPath;
+                string? _gridDataPath = null;
+                string? _unitDataPath = null;
+                string? _sourceDataPath = null;
+
+                if(returnObject != null) {
+                    ProjectData returnData = (ProjectData)returnObject;
+                    _tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                    Directory.CreateDirectory(_tempPath);
+
+                    // Grid Data
+                    if(returnData.GridData.Name != null) {
+                        _gridDataPath = Path.Combine(_tempPath, Guid.NewGuid().ToString() + ".csv");
+
+                        // Save the Images to a Folder and add the new file References
+                        if(returnData.GridImage.Length > 0) {
+                            SKImage _image = SKImage.FromEncodedData(returnData.GridImage);
+                            string _imagePath = Path.Combine(_tempPath, Guid.NewGuid().ToString() + ".png");
+                            returnData.GridData.ImagePath = _imagePath;
+                            File.WriteAllBytes(_imagePath, _image.Encode(SKEncodedImageFormat.Png, 100).ToArray());
+                        }
+
+                        var file = File.Create(_gridDataPath);
+                        file.Close();
+
+                        using(var writer = new StreamWriter(_gridDataPath, true))
+                        using(var csv = new CsvWriter(writer, CultureInfo.InvariantCulture)) {
+                            List<AssetManager.GridInfo> writeList = new List<AssetManager.GridInfo>();
+                            writeList.Add(returnData.GridData);
+                            csv.WriteRecords(writeList);
+                        }
+                    }
+
+                    if(returnData.UnitData.Count > 0) {
+                        List<AssetManager.UnitInformation> writeList = new List<AssetManager.UnitInformation>();
+                        for(int i = 0; i < returnData.UnitData.Count; ++i) {
+                            // Check if image exists
+                            if(returnData.UnitDataImages[i].Length > 0) {
+                                SKImage _image = SKImage.FromEncodedData(returnData.UnitDataImages[i]);
+                                string _imagePath = Path.Combine(_tempPath, Guid.NewGuid().ToString() + ".png");
+                                returnData.UnitData[i].ImagePath = _imagePath;
+                                File.WriteAllBytes(_imagePath, _image.Encode(SKEncodedImageFormat.Png, 100).ToArray());
+                            }
+                            writeList.Add(returnData.UnitData[i]);
+                        }
+
+                        _unitDataPath = Path.Combine(_tempPath, Guid.NewGuid().ToString() + ".csv");
+                        var file = File.Create(_unitDataPath);
+                        file.Close();
+
+                        using(var writer = new StreamWriter(_unitDataPath, true))
+                        using(var csv = new CsvWriter(writer, CultureInfo.InvariantCulture)) {
+                            csv.WriteRecords(writeList);
+                        }
+                    }
+
+                    if(returnData.HeatData.Count > 0) {
+                        List<SourceDataManager.HeatData> writeList = new List<SourceDataManager.HeatData>();
+                        for(int i = 0; i < returnData.HeatData.Count; ++i) {
+                            writeList.Add(returnData.HeatData[i]);
+                        }
+                        _sourceDataPath = Path.Combine(_tempPath, Guid.NewGuid().ToString() + ".csv");
+                        var file = File.Create(_sourceDataPath);
+                        file.Close();
+                        using(var writer = new StreamWriter(_sourceDataPath, true))
+                        using(var csv = new CsvWriter(writer, CultureInfo.GetCultureInfo("dk-DK"))) {
+                            csv.WriteRecords(writeList);
+                        }
+                    }
+                    
+                    return (true, _tempPath, _gridDataPath, _unitDataPath, _sourceDataPath);
+                } else return (false, null, null, null, null);
+                
             } catch (Exception) {
-                throw;
+                return (false, null, null, null, null);
             }
         }
 

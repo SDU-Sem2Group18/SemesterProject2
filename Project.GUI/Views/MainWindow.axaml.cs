@@ -75,7 +75,10 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                     ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
                 }
 
-                if(ViewModel!.ContentViewModel != ViewModel!.MainAppViewModel) ViewModel!.ContentViewModel = ViewModel!.MainAppViewModel;
+                if(ViewModel!.ContentViewModel != ViewModel!.MainAppViewModel) {
+                    ViewModel!.ContentViewModel = ViewModel!.MainAppViewModel;
+                    MessageBus.Current.SendMessage(new OpenedFromMainMenuMessage(false));
+                }
                 interaction.SetOutput(files[0].Path);
             }
             else interaction.SetOutput(null);
@@ -107,8 +110,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         if(files.Count >= 1) {
             interaction.SetOutput(files[0].Path);
-            if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
-            else ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
+            if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.internalSourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
+            else ViewModel!.MainAppViewModel.SourceData.internalSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
             ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
         }
         else interaction.SetOutput(null);

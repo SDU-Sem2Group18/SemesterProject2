@@ -49,17 +49,24 @@ namespace Project.GUI.Models
         public ProjectData CurrentChanges;
         public ProjectData SavedChanges;
 
+        private bool openedFromMainMenu;
+
         public ProjectSaveAndLoadManager() {
-            CurrentChanges = new ProjectData("untitled.hop", null, null, null, null);
+            CurrentChanges = new ProjectData(null, null, null, null, null);
             SavedChanges = new ProjectData();
 
             // Listen To Messages of Data Being Loaded
             MessageBus.Current.Listen<GridDataMessage>().Subscribe(HandleGridDataMessage);
             MessageBus.Current.Listen<UnitDataMessage>().Subscribe(HandleUnitDataMessage);
             MessageBus.Current.Listen<HeatDataMessage>().Subscribe(HandleHeatDataMessage);
+            MessageBus.Current.Listen<OpenedFromMainMenuMessage>().Subscribe(HandleOpenedFromMainMenuMessage);
         }
 
-
+        public void HandleOpenedFromMainMenuMessage(OpenedFromMainMenuMessage message) {
+            openedFromMainMenu = true;
+            if(message.NewProject) CurrentChanges.FileName = "Untitled";
+            MessageBus.Current.SendMessage(new FileSavedMessage(CurrentChanges.FileName));
+        }
         public void HandleGridDataMessage(GridDataMessage message) {
             CurrentChanges.GridData = message.GridInfo.Grid;
             string imagePath = (string)imagePathConverter.Convert(message.GridInfo, typeof(AssetManager), "grid", CultureInfo.InvariantCulture)!;
@@ -88,13 +95,14 @@ namespace Project.GUI.Models
         public bool SaveProject(string fileName) {
             try {
                 CurrentChanges.FilePath = fileName;
-                CurrentChanges.FileName = Path.GetFileName(fileName);
+                CurrentChanges.FileName = Path.GetFileName(fileName).Remove(Path.GetFileName(fileName).Length - 4);
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProjectData));
                 StreamWriter writer = new StreamWriter(File.Create(fileName));
                 xmlSerializer.Serialize(writer, CurrentChanges);
                 writer.Close();
 
                 SavedChanges = CurrentChanges;
+                MessageBus.Current.SendMessage(new FileSavedMessage(Path.GetFileName(fileName).Remove(Path.GetFileName(fileName).Length - 4)));
                 return true;
             } catch (Exception) {
                 return false;
@@ -102,11 +110,12 @@ namespace Project.GUI.Models
         }
         public (bool, string?, string?, string?, string?) ReadProjectFromFile(string fileName) {
             try {
-                CurrentChanges.FilePath = fileName;
-                CurrentChanges.FileName = Path.GetFileName(fileName);
+                if(!openedFromMainMenu) CurrentChanges.FilePath = fileName;
+                if(openedFromMainMenu) CurrentChanges.FileName = Path.GetFileName(fileName).Remove(Path.GetFileName(fileName).Length - 4);
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProjectData));
                 StreamReader reader = new StreamReader(File.OpenRead(fileName));
                 object? returnObject = xmlSerializer.Deserialize(reader);
+                reader.Close();
 
                 string? _tempPath;
                 string? _gridDataPath = null;
@@ -177,7 +186,9 @@ namespace Project.GUI.Models
                             csv.WriteRecords(writeList);
                         }
                     }
-                    
+
+                    if(openedFromMainMenu) MessageBus.Current.SendMessage(new ChangesMadeMessage());
+                    else MessageBus.Current.SendMessage(new FileSavedMessage(Path.GetFileName(fileName).Remove(Path.GetFileName(fileName).Length - 4)));
                     return (true, _tempPath, _gridDataPath, _unitDataPath, _sourceDataPath);
                 } else return (false, null, null, null, null);
                 

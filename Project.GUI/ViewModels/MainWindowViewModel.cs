@@ -90,14 +90,25 @@ public class MainWindowViewModel : ViewModelBase
 
         ProjectSaveAndLoadManager = new ProjectSaveAndLoadManager();
         MessageBus.Current.Listen<ChangesMadeMessage>().Subscribe(HandleChangesMadeMessage);
+        MessageBus.Current.Listen<FileSavedMessage>().Subscribe(HandleFileSavedMessage);
     }
 
     private void HandleChangesMadeMessage(ChangesMadeMessage message) {
-        changesMade = true;
+        ChangesMade = "●";
+    }
+    private void HandleFileSavedMessage(FileSavedMessage message) {
+        ChangesMade = "";
+        FileName = message.FileName;
     }
 
-    private bool changesMade = false;
-    public bool ChangesMade {
+    private string fileName = "";
+    public string FileName {
+        get => fileName;
+        set => this.RaiseAndSetIfChanged(ref fileName, value);
+    }
+
+    private string changesMade = "";
+    public string ChangesMade {
         get => changesMade;
         set => this.RaiseAndSetIfChanged(ref changesMade, value);
     }
@@ -129,6 +140,7 @@ public class MainWindowViewModel : ViewModelBase
         MainAppViewModel.Reset();
         ProjectSaveAndLoadManager = new ProjectSaveAndLoadManager();
         ContentViewModel = MainAppViewModel;
+        MessageBus.Current.SendMessage(new OpenedFromMainMenuMessage(true));
     }
 
     public void AboutButton() {
@@ -136,6 +148,8 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public void MainMenuButton() {
+        ChangesMade = "";
+        FileName = "";
         ContentViewModel = MainMenu;
     }
 

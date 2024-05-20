@@ -27,4 +27,17 @@ namespace Project.GUI.Models
     public class ChangesMadeMessage {
         public ChangesMadeMessage() { }
     }
+    public class FileSavedMessage {
+        public string FileName;
+        public FileSavedMessage(string fn) { 
+            FileName = fn;
+        }
+    }
+
+    public class OpenedFromMainMenuMessage {
+        public bool NewProject;
+        public OpenedFromMainMenuMessage(bool np) {
+            NewProject = np;
+        }
+    }
 }

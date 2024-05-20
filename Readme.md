@@ -1,7 +1,7 @@
 <img align=right src="https://github.com/SDU-Sem2Group18/SemesterProject2/blob/v1.0.0/Project.GUI/Deploy/Project.GUI.128x128.png?raw=true">
 
 
-<h2> Heat Optimisation Manager</h1>
+<h3> Heat Optimisation Manager</h1>
 <h4> Syddansk Universitet Sønderborg</h3>
 <h6> Summer Semester 2024, Group 18 - Niklas Braun & Rokas Norbutas</h6>
 

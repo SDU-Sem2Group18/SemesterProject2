@@ -1,42 +1,10 @@
-<svg fill="none" viewBox="0 0 1200 300" width="1200" height="300" xmlns="http://www.w3.org/2000/svg">
-<foreignObject width="100%" height="100%">
-<div xmlns="http://www.w3.org/1999/xhtml">
-<style>
-    .grid-container {
-        display: grid;
-        grid-template-columns: 128px auto;
-        align-items: center;
-    }
-    .grid-item img {
-            float: left;
-        }
-        .grid-item h1,
-        .grid-item h4,
-        .grid-item h6 {
-            padding-left: 20px; /* Adjust this value as needed */
-            margin: 0; /* Reset default margins */
-        }
-        .grid-item h4 {
-            margin-top: 10px; /* Adjust the top margin as needed */
-        }
-        .grid-item h6 {
-            margin-top: 5px; /* Adjust the top margin as needed */
-        }
-</style>
+<img align=right src="https://github.com/SDU-Sem2Group18/SemesterProject2/blob/v1.0.0/Project.GUI/Deploy/Project.GUI.128x128.png?raw=true">
 
-<div class="grid-container">
-    <div class="grid-item">
-        <img src="https://github.com/SDU-Sem2Group18/SemesterProject2/blob/v1.0.0/Project.GUI/Deploy/Project.GUI.128x128.png?raw=true">
-    </div>
-    <div class="grid-item">
-        <h1> Heat Optimisation Manager</h1>
-        <h4> Syddansk Universitet Sønderborg</h3>
-        <h6> Summer Semester 2024, Group 18 - Niklas Braun & Rokas Norbutas</h6>
-    </div>
-</div>
-</div>
-</foreignObject>
-</svg>
+
+<h1> Heat Optimisation Manager</h1>
+<h4> Syddansk Universitet Sønderborg</h3>
+<h6> Summer Semester 2024, Group 18 - Niklas Braun & Rokas Norbutas</h6>
+
 
 **Project Goal:** Given Data about Production Units, as well as hourly Heat Demand and Electricity Price, create a Desktop Application to optimise the given Data, both for Cost and Emissions.
 

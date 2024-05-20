@@ -12,7 +12,10 @@ namespace Project.Modules
 {
     public class SourceDataManager : IDisposable
     {
-        public struct HeatData {
+        [Delimiter(",")]
+        [CultureInfo("dk-DK")]
+        [InjectionOptions(CsvHelper.Configuration.InjectionOptions.Exception)]
+        public class HeatData {
             [Name("Time from")]
             [Format("dd/MM/yyyy HH:mm")]
             public DateTime TimeFrom { get; set; }

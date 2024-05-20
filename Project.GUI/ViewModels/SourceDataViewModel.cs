@@ -24,6 +24,7 @@ namespace Project.GUI.ViewModels
         public SourceDataViewModel() {
             HeatData = new ObservableCollection<SourceDataManager.HeatData>();
             MessageBus.Current.Listen<RefreshPlotsMessage>().Subscribe(HandleRefreshPlotsMessage);
+            internalSourcePath = "";
         }
 
         private void HandleRefreshPlotsMessage(RefreshPlotsMessage message) {
@@ -53,7 +54,7 @@ namespace Project.GUI.ViewModels
 
         // Properties and Methods related to HeatData, as specified in the SourceDataManager
         public ObservableCollection<SourceDataManager.HeatData> HeatData { get; set; }
-        public void LoadSourceData() {
+        public void LoadSourceData(string? OverWritePath = null) {
             SourcePathTextColour = Brush.Parse("#1d1d1d");
             try {
                 Debug.WriteLine(internalSourcePath);
@@ -74,6 +75,8 @@ namespace Project.GUI.ViewModels
                     Debug.WriteLine("Sending Command");
                     MessageBus.Current.SendMessage(new HeatDataLoadedMessage("ElectricityPlot", (xData, yData, title, "Date & Time", "Electricity Price (Kr)")));
                     SourceDataVisible = true;
+                    if(OverWritePath != null) SourcePath = OverWritePath;
+
                     MessageBus.Current.SendMessage(new HeatDataMessage(HeatData.ToList()));
                     MessageBus.Current.SendMessage(new HeatDataAvailableMessage(HeatData.ToList()));
                 }

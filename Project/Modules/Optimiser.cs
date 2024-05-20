@@ -20,7 +20,6 @@ namespace Project.Modules
         [Delimiter(",")]
         [CultureInfo("dk-DK")]
         [InjectionOptions(CsvHelper.Configuration.InjectionOptions.Exception)]
-        
         public class OptimisedData {
             [Name("Time from")]
             [Format("dd/MM/yyyy HH:mm")]
@@ -227,7 +226,7 @@ namespace Project.Modules
                         double sharedHeatCost(double x) {return (double)((productionUnitShare * producingUnit.ProductionCost + consumingUnitShare * consumingUnit.ProductionCost) * x); }
                         double totalHeatCost(double x, double middleBound) {
                             if(x <= middleBound) return sharedHeatCost(x);
-                            return sharedHeatCost(middleBound) + (double)((x-middleBound)*(electricityPrice + consumingUnit.ProductionCost) / consumingUnitEfficiency);
+                            else return sharedHeatCost(middleBound) + (double)((x-middleBound)*(electricityPrice + consumingUnit.ProductionCost) / consumingUnitEfficiency);
                         }
 
                         double optimisedPrice = totalHeatCost(heatDemand, maxSharedHeat);
@@ -241,14 +240,14 @@ namespace Project.Modules
                                 consumingUnitCostShare = (double)(heatDemand*consumingUnitShare);
                                 costOptimisedEmissions = (double)((producingUnit.Emissions == null ? 0 : producingUnit.Emissions)*productionUnitCostShare + (consumingUnit.Emissions == null ? 0 : consumingUnit.Emissions)*consumingUnitCostShare);
                             } else {
-                                productionUnitCostShare = (double)producingUnit.MaxHeat;
+                                productionUnitCostShare = (double)limit*productionUnitShare;
                                 consumingUnitCostShare = (double)(limit*consumingUnitShare + (heatDemand - limit));
-                                costOptimisedEmissions = (double)(producingUnit.MaxHeat*(producingUnit.Emissions == null ? 0 : producingUnit.Emissions) + (heatDemand - limit)*(consumingUnit.Emissions == null ? 0 : consumingUnit.Emissions));
+                                costOptimisedEmissions = (double)(limit*(producingUnit.Emissions == null ? 0 : producingUnit.Emissions) + (heatDemand - limit)*(consumingUnit.Emissions == null ? 0 : consumingUnit.Emissions));
                             }
                         }
                         DetermineCostShare(maxSharedHeat);
 
-                        for(double _ = maxSharedHeat - 0.01f; _ >= 0; _-=0.01f) {
+                        for(double _ = maxSharedHeat - 0.01f; _ >= 0.01; _-=0.01f) {
                             if(heatDemand - _ > consumingUnit.MaxHeat) break;
                             if(totalHeatCost(heatDemand, _) < optimisedPrice) {
                                 optimisedPrice = totalHeatCost(heatDemand, _);
@@ -281,14 +280,14 @@ namespace Project.Modules
                                 consumingUnitEmissionShare = (double)(heatDemand*consumingUnitShare);
                                 emissionOptimisedCost = (double)(producingUnit.ProductionCost * productionUnitEmissionShare + (consumingUnit.ProductionCost + electricityPrice) * consumingUnitEmissionShare);
                             } else {
-                                productionUnitEmissionShare = (double)producingUnit.MaxHeat;
+                                productionUnitEmissionShare = (double)limit*productionUnitShare;
                                 consumingUnitEmissionShare = (double)(limit*consumingUnitShare + (heatDemand - limit));
                                 emissionOptimisedCost = (double)(producingUnit.MaxHeat * producingUnit.ProductionCost + (heatDemand - limit)*(consumingUnit.ProductionCost + electricityPrice));
                             }
                         }
                         DetermineEmissionShare(maxSharedHeat);
 
-                        for(double _ = maxSharedHeat - 0.01f; _ >= 0; _-=0.01f) {
+                        for(double _ = maxSharedHeat - 0.01f; _ >= 0.1; _-=0.01f) {
                             if(heatDemand - _ > consumingUnit.MaxHeat) break;
                             if(totalEmissionCost(heatDemand, _) < optimisedEmissions) {
                                 optimisedEmissions = totalEmissionCost(heatDemand, _);
@@ -296,14 +295,13 @@ namespace Project.Modules
                             }
                         }
                         if(bestEmissionCombination.emission == null || optimisedEmissions < bestEmissionCombination.emission) bestEmissionCombination = (producingUnit, consumingUnit, productionUnitEmissionShare, consumingUnitEmissionShare, optimisedEmissions, emissionOptimisedCost);
-                        //Debug.WriteLine($"Heat Demand: {heatDemand}\nPrice: {optimisedPrice}\nCost Share: {productionUnitCostShare} + {consumingUnitCostShare}\nEmissions: {optimisedEmissions}\nEmissions Share: {productionUnitEmissionShare} + {consumingUnitEmissionShare}\n");
+                        Debug.WriteLine($"Heat Demand: {heatDemand}\nPrice: {optimisedPrice}\nCost Share: {productionUnitCostShare} + {consumingUnitCostShare}\nEmissions: {optimisedEmissions}\nEmissions Share: {productionUnitEmissionShare} + {consumingUnitEmissionShare}\n");
                     }
                 }
+                //Debug.WriteLine($"Best Emission Combination: {bestEmissionCombination.producingUnit?.Name} + {bestEmissionCombination.consumingUnit?.Name}\n");
+                //Debug.WriteLine($"Best Cost Combination: {bestCostCombination.producingUnit?.Name} + {bestCostCombination.consumingUnit?.Name}");
                 return (bestCostCombination, bestEmissionCombination);
-
             } else return ((null, null, null, null, null, null), (null, null, null, null, null, null));
-            //Debug.WriteLine($"Best Cost Combination: {bestCostCombination.producingUnit?.Name} + {bestCostCombination.consumingUnit?.Name}");
-            //Debug.WriteLine($"Best Emission Combination: {bestEmissionCombination.producingUnit?.Name} + {bestEmissionCombination.consumingUnit?.Name}\n");
         }
 
         private ((AssetManager.UnitInformation? unit, double? producedHeat) unit1, (AssetManager.UnitInformation? unit, double? producedHeat) unit2, double? cost, double? emission) FindBestCostCombination(float heatDemand, float electricityPrice, List<AssetManager.UnitInformation> units, (AssetManager.UnitInformation? producingUnit, AssetManager.UnitInformation? consumingUnit, double? producingUnitShare, double? consumingUnitShare, double? cost, double? emission) bestCostCombination) {
@@ -325,7 +323,7 @@ namespace Project.Modules
                     }
                 }
             }
-            if(returnData.cost != null && returnData.cost <= bestCostCombination.cost) return returnData;
+            //if(returnData.cost != null && returnData.cost <= bestCostCombination.cost) return returnData;
 
             // Second, Check all pairs of units, in both orders, for we are only checking max. Production capacity of one unit + remaining capacity of other unit
             // This way, two units yield two combinations as opposed to one.

@@ -71,12 +71,13 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 
                 if(_sourceDataPath != null) {
                     ViewModel!.MainAppViewModel.SourceData.internalSourcePath = _sourceDataPath!;
-                    ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+                    ViewModel!.MainAppViewModel.SourceData.LoadSourceData(files[0].Path.AbsolutePath.Replace("%20", " "));
                     ViewModel!.MainAppViewModel.SourceData.SourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
                 }
 
                 if(ViewModel!.ContentViewModel != ViewModel!.MainAppViewModel) {
                     ViewModel!.ContentViewModel = ViewModel!.MainAppViewModel;
+                    ViewModel!.MainAppViewModel.GridUnitButton();
                     MessageBus.Current.SendMessage(new OpenedFromMainMenuMessage(false));
                 }
                 interaction.SetOutput(files[0].Path);
@@ -112,7 +113,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             interaction.SetOutput(files[0].Path);
             if(files[0].TryGetLocalPath() == null) ViewModel!.MainAppViewModel.SourceData.internalSourcePath = files[0].Path.AbsolutePath.Replace("%20", " ");
             else ViewModel!.MainAppViewModel.SourceData.internalSourcePath = files[0].TryGetLocalPath()!.Replace("%20", " ");
-            ViewModel!.MainAppViewModel.SourceData.LoadSourceData();
+            ViewModel!.MainAppViewModel.SourceData.LoadSourceData(files[0].TryGetLocalPath()!.Replace("%20", " "));
         }
         else interaction.SetOutput(null);
     }

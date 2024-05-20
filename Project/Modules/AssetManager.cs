@@ -13,7 +13,10 @@ namespace Project.Modules
 {
     public class AssetManager {
 
-        public struct GridInfo {
+        [Delimiter(",")]
+        [CultureInfo("dk-DK")]
+        [InjectionOptions(InjectionOptions.Exception)]
+        public class GridInfo {
             [Name("name")]
             public string Name { get; set; }
 
@@ -25,8 +28,17 @@ namespace Project.Modules
 
             [Name("size")]
             public int Size { get; set; }
+            public GridInfo() {
+                Name = "";
+                ImagePath = "";
+                Architecture = "";
+                Size = 0;
+            }
         }
 
+        [Delimiter(",")]
+        [CultureInfo("dk-DK")]
+        [InjectionOptions(InjectionOptions.Exception)]
         public class UnitInformation {
             [Name("name")]
             public string Name { get; set; }
@@ -56,6 +68,12 @@ namespace Project.Modules
             public string SelfPath { get; set;}
             public void SetSelfPath(string path) {
                 SelfPath = path;
+            }
+
+            public UnitInformation() {
+                Name = "";
+                ImagePath = "";
+                SelfPath = "";
             }
         }
 

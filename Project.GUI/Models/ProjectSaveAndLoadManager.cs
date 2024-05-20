@@ -91,7 +91,6 @@ namespace Project.GUI.Models
 
         private IValueConverter imagePathConverter = new ImagePathConverter();
 
-        // https://www.codeproject.com/Articles/11271/Read-and-Write-Structures-to-Files-with-NET
         public bool SaveProject(string fileName) {
             try {
                 CurrentChanges.FilePath = fileName;
@@ -128,7 +127,7 @@ namespace Project.GUI.Models
                     Directory.CreateDirectory(_tempPath);
 
                     // Grid Data
-                    if(returnData.GridData.Name != null) {
+                    if(returnData.GridData.Name != null && returnData.GridData.Name != "") {
                         _gridDataPath = Path.Combine(_tempPath, Guid.NewGuid().ToString() + ".csv");
 
                         // Save the Images to a Folder and add the new file References

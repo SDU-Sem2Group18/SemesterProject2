@@ -7,31 +7,27 @@ using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 using System.Globalization;
 using System.Diagnostics;
+using CsvHelper.Configuration;
 
 namespace Project.Modules
 {
-    public class AssetManager: IDisposable {
+    public class AssetManager {
 
         public struct GridInfo {
-            private string Name;
-            private string ImagePath;
+            [Name("name")]
+            public string Name { get; set; }
 
-            public GridInfo(string name, string imagePath) {
-                Name = name;
-                ImagePath = imagePath;
-            }
+            [Name("image")]
+            public string ImagePath { get; set; }
+            
+            [Name("architecture")]
+            public string Architecture { get; set; }
 
-            public string GetName() {
-                return Name;
-            }
-
-            public string GetImage() {
-                return ImagePath;
-            }
-
+            [Name("size")]
+            public int Size { get; set; }
         }
 
-        public struct UnitInformation {
+        public class UnitInformation {
             [Name("name")]
             public string Name { get; set; }
 
@@ -55,54 +51,73 @@ namespace Project.Modules
             [Name("co2_ems")]
             [NullValues("-")]
             public float? Emissions { get; set; }
+
+            [Ignore]
+            public string SelfPath { get; set;}
+            public void SetSelfPath(string path) {
+                SelfPath = path;
+            }
         }
 
-        private GridInfo Grid;
-        public Dictionary<string, UnitInformation> UnitData;
+        public sealed class UnitInformationMap : ClassMap<UnitInformation> {
+            public UnitInformationMap() {
+                AutoMap(new CultureInfo("dk-DK", false));
+                Map(m => m.SelfPath).Ignore();
+            }
+        }
+
+        public GridInfo Grid;
+        public List<UnitInformation> UnitData;
         
-        private string SourcePath;
+        public string GridSourcePath;
+        public string UnitSourcePath;
 
-        public AssetManager(string sourcePath) {
-            Grid = new(
-                "Heatington",
-                "/Assets/Images/Heatington.png"
-            );
-            SourcePath = sourcePath;
-            UnitData = new Dictionary<string, UnitInformation>();
-            GetUnitDataFromFile(sourcePath);
+        public AssetManager(string gridPath, string unitPath) {
+            GridSourcePath = gridPath;
+            UnitSourcePath = unitPath;
+            UnitData = new List<UnitInformation>();
+            Grid = new GridInfo();
+            if(GridSourcePath != "") GetGridDataFromFile();
+            if(UnitSourcePath != "") GetUnitDataFromFile();
         }
 
-        public GridInfo GetGridInfo() {
-            return Grid;
-        }
-
-        public void GetUnitDataFromFile(string path) {
-            Dictionary<string, UnitInformation> returnDictionary = new Dictionary<string, UnitInformation>();
-            List<UnitInformation> units = new List<UnitInformation>();
+        public void GetGridDataFromFile() {
+            GridInfo gridInfo = new GridInfo();
+            List<GridInfo> grids = new List<GridInfo>();
 
             try {
-                using (var reader = new StreamReader(path))
+                using (var reader = new StreamReader(GridSourcePath))
                 using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
-                    var records = csv.GetRecords<UnitInformation>();
+                    var records = csv.GetRecords<GridInfo>();
                     foreach (var record in records) {
-                        returnDictionary.Add(record.Name, record);
+                        grids.Add(record);
                     }
+                    gridInfo = grids[0];
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Debug.WriteLine(ex.Message);
                 throw new Exception($"Error handling csv file. Ensure your file is formatted correctly. Details: \n{ex.Message}"); 
             }
-            UnitData = returnDictionary;
+            Grid = gridInfo;
         }
 
-        public void Dispose() {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected bool Disposed {get; private set; }
-        protected virtual void Dispose(bool disposing) {
-            Disposed = true;
+        public void GetUnitDataFromFile() {
+            List<UnitInformation> returnList = new List<UnitInformation>();
+
+            try {
+                using (var reader = new StreamReader(UnitSourcePath))
+                using (var csv = new CsvReader(reader, new CultureInfo("dk-DK", false))) {
+                    csv.Context.RegisterClassMap<UnitInformationMap>();
+                    var records = csv.GetRecords<UnitInformation>();
+                    foreach (var record in records) {
+                        returnList.Add(record);
+                    }
+                }
+            } catch (Exception ex) {
+                Debug.WriteLine(ex.Message);
+                throw new Exception($"Error handling csv file. Ensure your file is formatted correctly. Details: \n{ex.Message}"); 
+            }
+            UnitData = returnList;
         }
     }
 }

@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Project.GUI.ViewModels"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+             xmlns:local="clr-namespace:Project.GUI.Models;assembly=Project.GUI"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
+             x:Class="Project.GUI.Views.SourceDataView"
+             x:DataType="vm:SourceDataViewModel"
+             
+             >
+  
+  <UserControl.Resources>
+    <local:WhiteSpaceAlignmentConverter x:Key="whiteSpaceConverter" />
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="Label">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="Background" Value="#b5000c" />
+      <Style Selector="^:pointerover /template/ ContentPresenter">
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#800008" />
+      </Style>
+    </Style>
+    <Style Selector="DataGrid">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+      <Setter Property="VerticalGridLinesBrush" Value="#d1d1d1" />
+      <Setter Property="HorizontalGridLinesBrush" Value="#d1d1d1" />
+    </Style>
+    <Style Selector="DataGrid TextBlock">
+      <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+      <Setter Property="FontFamily" Value="Roboto Mono" />
+    </Style>
+    <Style Selector="DataGridRow">
+      <Style Selector="^:selected DataGridCell">
+        <Setter Property="Background" Value="#dd666e" />
+      </Style>
+    </Style>
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="Background" Value="#b5000c" />
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="SeparatorBrush" Value="#e4e4e4" />
+    </Style>
+    <Style Selector="DataGridColumnHeader TextBlock"> 
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontFamily" Value="Noto" />
+    </Style>
+  </UserControl.Styles>
+
+  <!-- Main Content --> 
+  <Grid RowDefinitions="*, 755" Background="#ffffff">
+    <!-- Source File Selection -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,0">
+      <Label FontWeight="SemiBold" FontSize="25">Data: </Label>
+      <Border Margin="5,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
+        <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding SourcePathTextColour}" Text="{Binding SourcePath}" />
+      </Border>
+      <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenSourceDataCommand}">
+        <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
+      </Button>
+    </StackPanel>
+
+    <!-- Source Data Table And Graphs Go Here -->
+    <Grid Grid.Row="1" x:Name="ContentGrid" IsVisible="{Binding SourceDataVisible}" ColumnDefinitions="472,25,*" Margin="10,30,10,10">
+      <!-- Source Data Table -->
+      <DataGrid HorizontalAlignment="Stretch" Height="715" VerticalScrollBarVisibility="Auto" Grid.Column="0" 
+                ItemsSource="{Binding HeatData}" 
+                IsReadOnly="True" 
+                GridLinesVisibility="All" 
+                CanUserReorderColumns="False"
+                CanUserResizeColumns="False"
+                CanUserSortColumns="False"
+                BorderThickness="1" 
+                BorderBrush="#1d1d1d">
+        <DataGrid.Columns>
+          <DataGridTextColumn Width="110" Header="From" Binding="{Binding TimeFrom, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+          <DataGridTextColumn Width="110" Header="To" Binding="{Binding TimeTo, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+          <DataGridTextColumn Width="125" Header="Heat Demand (MWh)" Binding="{Binding HeatDemand, Converter={StaticResource whiteSpaceConverter}, ConverterParameter=5}}" />
+          <DataGridTextColumn Width="125" Header="El. Price (DKK/MWh)" Binding="{Binding ElectricityPrice, Converter={StaticResource whiteSpaceConverter}, ConverterParameter=7}}" />
+        </DataGrid.Columns>
+      </DataGrid>
+      
+      <!-- Source Data Graphs -->
+      <StackPanel Grid.Column="2" Orientation="Vertical">
+        <!-- Border CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1" -->
+          <ScottPlot:AvaPlot Margin="0,-15,0,0" HorizontalAlignment="Stretch" Height="350" Name="HeatPlot" />
+        <!-- /Border -->
+        <ScottPlot:AvaPlot Margin="0,15,0,0" HorizontalAlignment="Stretch" Height="350" Name="ElectricityPlot" />
+      </StackPanel>
+    </Grid>
+  </Grid>
+
+</UserControl>

@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Project.GUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="760"
+             x:Class="Project.GUI.Views.MainAppView"
+             x:DataType="vm:MainAppViewModel"
+             >
+
+  
+  <!-- Main Content Area -->
+  <Grid ColumnDefinitions="200,*" Background="#d2d2d2">
+    <!-- Side Panel to the Left -->
+    <Grid Grid.Column="0" RowDefinitions="200,*,184" Background="#b5000c">
+      <!-- Top View Selection Buttons -->
+      <StackPanel Grid.Row="0" Width="200">
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="{Binding GridUnitButtonColour}" Command="{Binding GridUnitButton}">
+          <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Grid and Units</Label>  
+        </Button>
+        <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="{Binding SourceDataButtonColour}" Command="{Binding SourceDataButton}">
+          <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Source Data</Label>  
+        </Button>
+        <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="{Binding OptimiserButtonColour}" Command="{Binding OptimiserButton}">
+          <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Optimisation</Label>  
+        </Button>
+      </StackPanel>
+
+      <!-- Bottom Command Buttons -->
+      <StackPanel Grid.Row="2" Width="200">
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SaveProjectCommand}">
+          <StackPanel Width="200" Orientation="Horizontal">
+            <Image Height="35" Source="{SvgImage /Assets/new-file-white.svg}" Margin="10,0,5,0" />
+            <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Save...</Label>  
+          </StackPanel>
+        </Button>
+        <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenProjectCommand}">
+          <StackPanel Width="200" Orientation="Horizontal">
+            <Image Height="35" Source="{SvgImage /Assets/open-file-white.svg}" Margin="10,0,5,0" />
+            <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Open...</Label>  
+          </StackPanel>  
+        </Button>
+        <Canvas Height="1" Width="180" Margin="0,00,0,0" Background="#ffffff"></Canvas>
+        <Button Height="60" Margin="0,0,0,0" VerticalAlignment="Top" Width="200" Background="#b5000c" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MainMenuButton}">
+          <StackPanel Width="200" Orientation="Horizontal">
+            <Image Height="30" Source="{SvgImage /Assets/return-icon-white.svg}" Margin="12,0,8,0" />
+            <Label VerticalAlignment="Center" Margin="0,-4,0,0" Foreground="#ffffff" FontWeight="SemiBold" FontSize="20">Main Menu</Label>  
+          </StackPanel> 
+        </Button>
+      </StackPanel>
+    </Grid>
+
+    <!-- Current View -->
+    <UserControl Grid.Column="1" Content="{Binding ContentViewModel}" />
+  </Grid>
+
+
+</UserControl>

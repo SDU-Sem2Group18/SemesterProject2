@@ -1,0 +1,159 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Project.GUI.ViewModels"
+             xmlns:local="clr-namespace:Project.GUI.Models;assembly=Project.GUI"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="765"
+             x:Class="Project.GUI.Views.GridUnitView"
+             x:DataType="vm:GridUnitViewModel">
+  
+  <UserControl.Resources>
+    <local:ImagePathConverter x:Key="imagePathConverter" />
+    <local:IntHidingConverter x:Key="intHidingConverter" />
+    <local:UnitParameterVisibilityConverter x:Key="unitParameterVisibilityConverter" />
+    <local:GasOrOilConverter x:Key="gasOrOilConverter" />
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="Label">
+      <Setter Property="Foreground" Value="#1d1d1d" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="Foreground" Value="#ffffff" />
+      <Setter Property="Background" Value="#b5000c" />
+      <Style Selector="^:pointerover /template/ ContentPresenter">
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#800008" />
+      </Style>
+    </Style>
+  </UserControl.Styles>
+
+  <!-- Main Content Area -->
+  <Grid RowDefinitions="*, 755" Background="#ffffff">
+    <StackPanel Grid.Row="0" Orientation="Horizontal" >
+      <!-- Grid Data Load Button -->
+      <StackPanel Orientation="Horizontal" Margin="11,10,0,0">
+        <Label FontWeight="SemiBold" FontSize="25">Grid: </Label>
+        <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
+          <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding GridSourcePathTextColour}" Text="{Binding GridSourcePath}" />
+        </Border>
+        <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenGridDataCommand}">
+          <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
+        </Button>
+      </StackPanel>
+
+      <!-- Unit Data Load Button -->
+      <StackPanel Orientation="Horizontal" Margin="50,10,0,0">
+        <Label FontWeight="SemiBold" FontSize="25">Units: </Label>
+        <Border Margin="10,0,0,0" CornerRadius="3" BorderThickness="2" BorderBrush="#d1d1d1">
+          <TextBlock VerticalAlignment="Center" Margin="10,5,6,-6" Height="30" Width="400" Foreground="{Binding UnitSourcePathTextColour}" Text="{Binding UnitSourcePath}" />
+        </Border>
+        <Button Height="37" Width="65" Margin="10,0,0,0" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenUnitDataCommand}">
+          <Label Foreground="#ffffff" FontWeight="SemiBold" HorizontalAlignment="Center">Load</Label>
+        </Button>
+      </StackPanel>
+    </StackPanel>
+
+    <!-- Data Display -->
+    <ScrollViewer Margin="10,15,10,10" Grid.Row="1">
+      <StackPanel Orientation="Vertical">
+        <!-- Grid Information -->
+        <Label FontWeight="SemiBold" FontSize="45" IsVisible="{Binding GridDataHeaderVisible}">Heating Grid Information</Label>
+        <StackPanel Margin="10,30,10,10" Orientation="Horizontal" IsVisible="{Binding GridDataHeaderVisible}">
+          <Border Width="350" Height ="200" BorderThickness="0" BorderBrush="Black">
+            <asyncImageLoader:AdvancedImage Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{Binding GridUnitAssetManager, Converter={StaticResource imagePathConverter}, ConverterParameter=grid}}" />
+          </Border>
+          <Grid VerticalAlignment="Top" Margin="20,-10,0,0" ColumnDefinitions="250,*" RowDefinitions="55,55,55" Height="200" DataContext="{Binding GridInfo}">
+            <Label Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" FontSize="35">Name: </Label>
+            <Label Grid.Row="0" Grid.Column="1" FontSize="35" Content="{Binding Name}" />
+
+            <Label Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" FontSize="35">Architecture: </Label>
+            <Label Grid.Row="1" Grid.Column="1" FontSize="35" Content="{Binding Architecture}" />
+
+            <Label Grid.Row="2" Grid.Column="0" FontWeight="SemiBold" FontSize="35">Size: </Label>
+            <Label Grid.Row="2" Grid.Column="1" FontSize="35" Content="{Binding Size, Converter={StaticResource intHidingConverter}}" />
+          </Grid>
+        </StackPanel>
+
+        <!-- Unit Information -->
+        <StackPanel Orientation="Vertical">
+          <Label FontWeight="SemiBold" FontSize="45" Margin="0,30,0,0" IsVisible="{Binding UnitDataHeaderVisible}">Production Unit Information</Label>
+          <ItemsControl ItemsSource="{Binding UnitData}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Grid RowDefinitions="250" Width="1200">
+                  <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Height="200" Margin="10,25,10,25">
+                      <Border Width="350" Height ="200" BorderThickness="0" BorderBrush="Black">
+                        <asyncImageLoader:AdvancedImage Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{Binding ., Converter={StaticResource imagePathConverter}, ConverterParameter=unit}" />
+                      </Border>
+                      <StackPanel Margin="20,0,0,0" Orientation="Vertical">
+                        <Grid ColumnDefinitions="250,*">
+                          <Label Grid.Column="0" FontWeight="SemiBold" FontSize="20">Name: </Label>
+                          <Label Grid.Column="1" FontSize="20" Content="{Binding Name}" />
+                        </Grid>
+                        <Grid Margin="0,10,0,0" ColumnDefinitions="250,*">
+                          <Label Grid.Column="0" FontWeight="SemiBold" FontSize="20">Max Heat: </Label>
+                          <Grid Grid.Column="1" ColumnDefinitions="75,*">
+                            <Label Grid.Column="0" FontSize="20" Content="{Binding MaxHeat, StringFormat={}{0:0.0}}" />
+                            <Label Grid.Column="1" FontSize="20" Content="MW" />
+                          </Grid>
+                        </Grid>
+                        <Grid IsVisible="{Binding ., Converter={StaticResource unitParameterVisibilityConverter}, ConverterParameter=max_el}" ColumnDefinitions="250,*">
+                          <Label Grid.Column="0" FontWeight="SemiBold" FontSize="20">Max Electricity: </Label>
+                          <Grid Grid.Column="1" ColumnDefinitions="75,*">
+                            <Label Grid.Column="0" FontSize="20" Content="{Binding MaxElectricity, StringFormat={}{0:0.0}}" />
+                            <Label Grid.Column="1" FontSize="20" Content="MW" />
+                          </Grid>
+                        </Grid>
+                        <Grid ColumnDefinitions="250,*">
+                          <Label Grid.Column="0" FontWeight="SemiBold" FontSize="20">Production Cost: </Label>
+                          <Grid Grid.Column="1" ColumnDefinitions="75,*">
+                            <Label Grid.Column="0" FontSize="20" Content="{Binding ProductionCost, StringFormat={}{0:0}}" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                              <Label FontSize="20" Content="Kr. / MWh" />
+                              <Label FontSize="15" Margin="-5,0,0,0" VerticalAlignment="Bottom" Content="th" />
+                            </StackPanel>
+                          </Grid>
+                        </Grid>
+                        <Grid IsVisible="{Binding ., Converter={StaticResource unitParameterVisibilityConverter}, ConverterParameter=gas_cons}" ColumnDefinitions="250,*">
+                          <Label Grid.Column="0" FontWeight="SemiBold" FontSize="20" Content="{Binding Name, Converter={StaticResource gasOrOilConverter}, ConverterParameter=upper, StringFormat={}{0} Consumption}" />
+                          <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Grid Grid.Column="1" ColumnDefinitions="75,*">
+                              <Label Grid.Column="0" FontSize="20" Content="{Binding GasConsumption, StringFormat={}{0:0.0}}" />
+                              <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Label FontSize="20" Content="MWh" />
+                                <Label FontSize="15" Margin="-5,0,0,0" VerticalAlignment="Bottom" Content="{Binding Name, Converter={StaticResource gasOrOilConverter}, ConverterParameter=lower}"  />
+                                <Label FontSize="20" Content="/ MWh" />
+                                <Label FontSize="15" Margin="-5,0,0,0" VerticalAlignment="Bottom" Content="th" />
+                              </StackPanel>
+                            </Grid>
+                          </StackPanel>
+                        </Grid>
+                        <Grid IsVisible="{Binding ., Converter={StaticResource unitParameterVisibilityConverter}, ConverterParameter=co2_ems}" ColumnDefinitions="250,*">
+                          <Label Grid.Column="0" FontWeight="SemiBold" FontSize="20">CO₂ Emissions: </Label>
+                          <Grid Grid.Column="1" ColumnDefinitions="75,*">
+                            <Label Grid.Column="0" FontSize="20" Content="{Binding Emissions}, StringFormat={}{0:0.0}" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                              <Label FontSize="20" Content="Kg / MWh" />
+                              <Label FontSize="15" Margin="-5,0,0,0" VerticalAlignment="Bottom" Content="th" />
+                            </StackPanel>
+                          </Grid>
+                        </Grid>
+
+                      </StackPanel>
+                    </StackPanel>
+                    <Canvas Height="1" Width="800" Margin="0,0,0,0" HorizontalAlignment="Center" Background="#b5000c"></Canvas>
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+
+</UserControl>

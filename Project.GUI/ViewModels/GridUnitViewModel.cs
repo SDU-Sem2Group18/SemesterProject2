@@ -74,6 +74,7 @@ namespace Project.GUI.ViewModels
                 Debug.WriteLine("AssetManager created");
                 GridInfo = GridUnitAssetManager.Grid;
                 GridDataHeaderVisible = true;
+                MessageBus.Current.SendMessage(new GridDataMessage(GridUnitAssetManager));
                 SenddataLoadedMessage();
             } catch (Exception e) {
                 Debug.WriteLine(e.Message);
@@ -104,6 +105,7 @@ namespace Project.GUI.ViewModels
                 }
                 foreach(AssetManager.UnitInformation _ in unitData) UnitData.Add(_);
                 UnitDataHeaderVisible = true;
+                MessageBus.Current.SendMessage(new UnitDataMessage(UnitData.ToList()));
                 SenddataLoadedMessage();
                 
             } catch (Exception e) {

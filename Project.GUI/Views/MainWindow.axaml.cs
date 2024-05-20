@@ -22,6 +22,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         InitializeComponent();
         this.WhenActivated(action => action(ViewModel!.ShowOpenProjectDialog.RegisterHandler(DoShowProjectDialogAsync)));
+        this.WhenActivated(action => action(ViewModel!.ShowSaveProjectDialog.RegisterHandler(DoShowSaveProjectDialogAsync)));
         this.WhenActivated(action => action(ViewModel!.ShowOpenSourceDataDialog.RegisterHandler(DoShowSourceDataDialogAsync)));
         this.WhenActivated(action => action(ViewModel!.ShowOpenUnitDataDialog.RegisterHandler(DoShowUnitDataDialogAsync)));
         this.WhenActivated(action => action(ViewModel!.ShowOpenGridDataDialog.RegisterHandler(DoShowGridDataDialogAsync)));
@@ -46,6 +47,22 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         if(files.Count >= 1) interaction.SetOutput(files[0].Path);
         else interaction.SetOutput(null);
+    }
+
+    private async void DoShowSaveProjectDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {
+        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions() {
+            Title = "Save Project",
+            FileTypeChoices = [ProjectFile],
+            SuggestedFileName = "Heat Optimisation.hop",
+            ShowOverwritePrompt = true
+        });
+        if (file != null) {
+            interaction.SetOutput(file.Path);
+            string returnFile;
+            if(file.TryGetLocalPath() == null) returnFile = file.Path.AbsolutePath.Replace("%20", " ");
+            else returnFile = file.TryGetLocalPath()!.Replace("%20", " ");
+            ViewModel!.ProjectSaveAndLoadManager.SaveProject(returnFile);
+        }
     }
 
     private async void DoShowSourceDataDialogAsync(InteractionContext<OpenProjectViewModel, System.Uri?> interaction) {

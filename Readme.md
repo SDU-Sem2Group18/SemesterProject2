@@ -1,3 +1,5 @@
+<svg fill="none" viewBox="0 0 1200 300" width="1200" height="300" xmlns="http://www.w3.org/2000/svg">
+<foreignObject width="100%" height="100%">
 <style>
     .grid-container {
         display: grid;
@@ -31,8 +33,9 @@
         <h6> Summer Semester 2024, Group 18 - Niklas Braun & Rokas Norbutas</h6>
     </div>
 </div>
+</foreignObject>
+</svg>
 
-#
 **Project Goal:** Given Data about Production Units, as well as hourly Heat Demand and Electricity Price, create a Desktop Application to optimise the given Data, both for Cost and Emissions.
 
 ### To Run

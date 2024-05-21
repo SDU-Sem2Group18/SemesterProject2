@@ -8,6 +8,8 @@
 #
 
 **Project Goal:** Given Data about Production Units, as well as hourly Heat Demand and Electricity Price, create a Desktop Application to optimise the given Data, both for Cost and Emissions.
+######
+<img align=center src="https://i.imgur.com/pMDjoif.png">
 
 #
 

@@ -42,7 +42,7 @@ Project.GUI/Deploy/bin/*
 ```
 
 #
-Note: As of v1.0.0, the Sample Source Data is contained in the installation directory. Alternatively, it can be found in the source repo [here](https://github.com/SDU-Sem2Group18/SemesterProject2/tree/v1.0.0/Project/Data).
+Note: Sample Data can be obtained [here](https://github.com/SDU-Sem2Group18/SemesterProject2/tree/v1.0.1/Sample_Data).
 
 #
 
